@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1",
+    "name": "Moonie NATUR 2.0 szumiący miś z lampką",
+    "link": "https://www.dobreliski.pl/pl/p/Moonie-NATUR-2.0-szumiacy-mis-z-lampka-SAND/33115",
+    "image": "/images/item-1.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "2",
+    "name": "Lovevery The Looker Play Kit",
+    "link": "https://lovevery.eu/products/the-play-kits-the-looker",
+    "image": "/images/item-2.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "3",
+    "name": "Artipoppe",
+    "link": "",
+    "image": "/images/item-3.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "4",
+    "name": "Zestaw krzesła Tripp Trapp® + zestaw dla noworodków",
+    "link": "https://www.stokke.com/POL/pl-pl/do-siedzenia/stokke-high-chair-bundles/tripp-trapp-newborn-complete.html",
+    "image": "/images/item-4.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "5",
+    "name": "Gryzak moonie MOONIE SAND",
+    "link": "",
+    "image": "/images/item-5.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "6",
+    "name": "Jellycat",
+    "link": "https://eu.jellycat.com",
+    "image": "/images/item-6.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "7",
+    "name": "Кроватка Sebra Bed Baby & Jr.",
+    "link": "https://sebra-interior.com/",
+    "image": "/images/item-7.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "8",
+    "name": "Anex Wom Śpiworek Do Wózka 0m+",
+    "link": "https://babyhit.pl/product-pol-66468-Anex-Wom-Spiworek-Do-Wozka-0m-Light-Grey.html",
+    "image": "/images/item-8.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "9",
+    "name": "LAMPKA NOCNA USB ZE SŁONIEM",
+    "link": "https://www.zarahome.com/pl/lampka-nocna-usb-ze-sloniem-l46699047",
+    "image": "/images/item-9.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "10",
+    "name": "ALBUM WSPOMNIEŃ DZIECIĘCYCH SŁONIE",
+    "link": "https://www.zarahome.com/pl/album-wspomnien-dzieciecych-slonie-l43600111",
+    "image": "/images/item-10.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  }
+]
