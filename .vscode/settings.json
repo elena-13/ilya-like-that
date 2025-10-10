@@ -1,0 +1,12 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.wordWrap": "on",
+  "prettier.printWidth": 100,
+  "editor.snippetSuggestions": "top",
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  }
+}
