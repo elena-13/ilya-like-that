@@ -12,7 +12,7 @@
     "name": "Lovevery The Looker Play Kit",
     "link": "https://lovevery.eu/products/the-play-kits-the-looker",
     "image": "/images/item-2.jpg",
-    "isBooked": false,
+    "isBooked": true,
     "bookedBy": null
   },
   {

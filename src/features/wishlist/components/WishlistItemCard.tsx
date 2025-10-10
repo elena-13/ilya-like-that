@@ -19,7 +19,6 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         'relative group block transition-transform duration-300',
         'hover:scale-105 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-500'
       )}
-      // className="relative group block"
     >
       {/* Card container */}
       <div className="bg-white rounded-2xl shadow-sm p-4 h-full flex flex-col">
