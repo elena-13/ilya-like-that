@@ -3,7 +3,6 @@ import { kv } from '@vercel/kv';
 
 import WishlistList from '@/features/wishlist/components/WishlistList';
 import { WishlistItem } from '@/features/wishlist/types';
-import { getCurrentUser } from '@/lib/auth-utils';
 
 async function getWishlistItems(): Promise<WishlistItem[]> {
   try {
@@ -17,7 +16,6 @@ async function getWishlistItems(): Promise<WishlistItem[]> {
 
 export default async function Home() {
   const items = await getWishlistItems();
-  const user = await getCurrentUser();
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
