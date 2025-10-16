@@ -1,16 +1,23 @@
 import Image from 'next/image';
+import { kv } from '@vercel/kv';
 
 import WishlistList from '@/features/wishlist/components/WishlistList';
-import wishlistData from '@/features/wishlist/data/wishlist.json';
 import { WishlistItem } from '@/features/wishlist/types';
+import { getCurrentUser } from '@/lib/auth-utils';
 
-function getWishlistItems(): WishlistItem[] {
-  // В будущем здесь будет запрос к Vercel KV
-  return wishlistData;
+async function getWishlistItems(): Promise<WishlistItem[]> {
+  try {
+    const items = await kv.get<WishlistItem[]>('wishlist');
+    return items || [];
+  } catch (error) {
+    console.error('Failed to fetch wishlist items:', error);
+    return [];
+  }
 }
 
-export default function Home() {
-  const items = getWishlistItems();
+export default async function Home() {
+  const items = await getWishlistItems();
+  const user = await getCurrentUser();
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
