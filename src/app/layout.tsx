@@ -3,7 +3,8 @@ import { Inter as FontSans } from 'next/font/google';
 import './globals.css';
 
 import { cn } from '@/lib/utils';
-import Header from '@/widgets/Header';
+import AuthClientProvider from '@/components/auth/AuthClientProvider';
+import Header from '@/widgets/Header/Header';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -28,8 +29,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Header />
-        <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
+        <AuthClientProvider>
+          <Header />
+          <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
+        </AuthClientProvider>
       </body>
     </html>
   );
