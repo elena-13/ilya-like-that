@@ -50,21 +50,6 @@ export default function UserMenu({ user }: UserMenuProps) {
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
-      {/* <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuItem disabled className="opacity-80">
-          {email ?? name ?? 'Signed in'}
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <a href="/account">Account</a>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <form action={onSignOutAction} className="w-full">
-            <button type="submit" className="w-full text-left">
-              Sign out
-            </button>
-          </form>
-        </DropdownMenuItem>
-      </DropdownMenuContent> */}
     </DropdownMenu>
   );
 }
