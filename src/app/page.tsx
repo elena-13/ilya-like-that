@@ -4,6 +4,7 @@ import { kv } from '@vercel/kv';
 import WishlistList from '@/features/wishlist/components/WishlistList';
 import { WishlistItem } from '@/features/wishlist/types';
 import { StarsField } from '@/features/wishlist/components/StarsField';
+import { AuthSlot } from '@/features/auth/AuthSlot';
 
 async function getWishlistItems(): Promise<WishlistItem[]> {
   try {
@@ -28,6 +29,10 @@ export default async function Home() {
             relative overflow-clip w-full grow       min-h-full
           "
         >
+          <div className="absolute top-4 right-4 z-30 pointer-events-auto">
+            <AuthSlot />
+          </div>
+
           <div className="relative flex items-center justify-center text-center flex-col gap-6 lg:gap-10 p-6 lg:p-10 grow    min-h-full ">
             <h1 className="text-9xl font-primary font-extrabold text-navy max-w-6xl relative z-20">
               Ilya Like That!

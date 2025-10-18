@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import UserMenu from '@/features/auth/UserMenu';
 
 import { AuthSkeleton } from './parts/AuthSkeleton';
-import { LoginButton } from './parts/LoginButton';
+import { LoginButton } from '../../features/auth/LoginButton';
 import { BrandLink } from './parts/BrandLink';
 
 export default function Header() {
