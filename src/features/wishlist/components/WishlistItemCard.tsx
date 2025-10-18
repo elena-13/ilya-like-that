@@ -109,7 +109,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         >
           <div className="absolute inset-0 bg-yellow/70" />
           <div className="absolute top-3 right-3">
-            <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-3 lg:py-4 px-4 lg:px-8  font-secondary">
+            <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-2 px-3 font-secondary text-sm">
               Reserved
             </span>
           </div>
