@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 
-import { cn } from '@/lib/utils';
-
 import { WishlistItem } from '../types';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Gift } from 'lucide-react';
@@ -37,7 +35,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         throw new Error(error || 'Failed to book the item.');
       }
 
-      // Это "магия" Next.js: обновляем серверные данные без перезагрузки страницы!
+      // This is the "magic" of Next.js: updating server-side data without reloading the page!
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -48,53 +46,76 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   };
 
   return (
-    <div className="relative group rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-lg">
-      <div className="p-4 flex flex-col h-full">
-        <div className="relative aspect-square bg-gray-50 rounded-xl overflow-hidden">
-          <Image
-            src={item.image}
-            alt={item.name}
-            width={300}
-            height={300}
-            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-3 flex items-end justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            {item.link && (
+    <article
+      className="
+        group/card relative mb-4 inline-block w-full overflow-hidden
+        rounded-4xl bg-white ring-1 ring-black/5 shadow-sm focus:outline-none
+      "
+      aria-label={item.name}
+    >
+      <Image
+        src={item.image}
+        alt={item.name}
+        width={800}
+        height={1200}
+        sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+        className="w-full h-auto object-cover"
+      />
+
+      <div className="px-5 py-3">
+        <h3 className="text-navy font-bold leading-snug line-clamp-2">{item.name}</h3>
+      </div>
+
+      {!item.isBooked && (
+        <div
+          className="pointer-events-none absolute inset-0 z-10 opacity-0
+                 transition-opacity duration-300
+                 group-hover/card:opacity-100"
+        >
+          <div className="absolute inset-0 bg-black/40" />
+
+          {item.link && (
+            <div className="absolute top-3 left-3 pointer-events-auto">
               <Button asChild variant="secondary" size="sm">
-                <a href={item.link} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open external link"
+                >
                   <ExternalLink className="h-4 w-4" />
                 </a>
               </Button>
-            )}
+            </div>
+          )}
 
-            {session && !item.isBooked && (
-              <Button onClick={handleBook} disabled={isBooking} size="sm">
-                <Gift className="mr-2 h-4 w-4" />
-                {isBooking ? 'Booking...' : 'Book this gift'}
-              </Button>
-            )}
+          {/* Booking */}
+          <div className="absolute top-3 right-3 pointer-events-auto">
+            <Button onClick={handleBook} disabled={isBooking} variant="secondary" size="sm">
+              <Gift className="mr-2 h-4 w-4" />
+              {isBooking ? 'Booking...' : 'Book this gift'}
+            </Button>
           </div>
         </div>
+      )}
 
-        <div className="pt-4 text-center flex-grow flex items-center justify-center">
-          <h3 className="font-semibold text-gray-800 text-base leading-tight">{item.name}</h3>
-        </div>
-      </div>
-
-      {/* Overlay: Reserved */}
       {item.isBooked && (
         <div
-          className={cn(
-            'absolute inset-0 rounded-2xl flex flex-col items-center justify-center text-white',
-            'bg-green-500/80 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-90'
-          )}
+          className="
+                    absolute inset-0 grid place-items-center
+                    rounded-4xl
+                  "
+          aria-label="Reserved"
         >
-          <span className="bg-white text-green-800 text-sm font-semibold px-4 py-1 rounded-full shadow-sm">
-            Reserved
-          </span>
+          <div className="absolute inset-0 bg-yellow/70" />
+          <div className="absolute top-3 right-3">
+            <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-3 lg:py-4 px-4 lg:px-8  font-secondary">
+              Reserved
+            </span>
+          </div>
         </div>
       )}
-    </div>
+    </article>
   );
 });
 

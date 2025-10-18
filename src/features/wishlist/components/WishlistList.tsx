@@ -9,9 +9,9 @@ type WishlistListProps = {
 
 export default function WishlistList({ items }: WishlistListProps) {
   return (
-    <div>
+    <>
       {items.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="columns-1 sm:columns-2 lg:columns-4 gap-4 [column-fill:_balance]">
           {items.map((item) => (
             <WishlistItemCard key={item.id} item={item} />
           ))}
@@ -19,6 +19,6 @@ export default function WishlistList({ items }: WishlistListProps) {
       ) : (
         <WishlistEmptyState />
       )}
-    </div>
+    </>
   );
 }
