@@ -113,16 +113,10 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       </div>
 
       {!item.isBooked && (
-        <div
-          className="pointer-events-auto absolute inset-0 z-10 opacity-100
-               transition-opacity duration-300
-               lg:pointer-events-none lg:opacity-0
-               lg:group-hover/card:opacity-100"
-        >
-          <div className="absolute inset-0 lg:bg-black/40" />
-
-          {item.link && (
-            <div className="absolute top-3 left-3">
+        <>
+          {/* Mobile */}
+          <div className="md:hidden absolute top-3 right-3 z-10 flex gap-2">
+            {item.link && (
               <Button asChild variant="secondary" className="cursor-pointer" size="sm">
                 <a
                   href={item.link}
@@ -133,11 +127,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
                   <ExternalLink className="h-4 w-4" />
                 </a>
               </Button>
-            </div>
-          )}
-
-          {/* Booking */}
-          <div className="absolute top-3 right-3">
+            )}
             <Button
               onClick={handleBookingClick}
               disabled={isBooking || status === 'loading'}
@@ -146,10 +136,43 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
               size="sm"
             >
               <Gift className="h-4 w-4" />
-              {isBooking ? 'Booking...' : 'Book this gift'}
+              Book
             </Button>
           </div>
-        </div>
+
+          {/* Desktop */}
+          <div className="hidden md:block pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
+            <div className="absolute inset-0 bg-black/40" />
+
+            {item.link && (
+              <div className="absolute top-3 left-3 pointer-events-auto">
+                <Button asChild variant="secondary" className="cursor-pointer" size="sm">
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open external link"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </Button>
+              </div>
+            )}
+
+            <div className="absolute top-3 right-3 pointer-events-auto">
+              <Button
+                onClick={handleBookingClick}
+                disabled={isBooking || status === 'loading'}
+                variant="secondary"
+                className="cursor-pointer"
+                size="sm"
+              >
+                <Gift className="h-4 w-4" />
+                Book
+              </Button>
+            </div>
+          </div>
+        </>
       )}
 
       {item.isBooked && (
