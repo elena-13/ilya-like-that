@@ -3,5 +3,6 @@ export type WishlistItem = {
   name: string;
   image: string;
   link: string;
-  isBooked?: boolean;
+  isBooked: boolean;
+  bookedById: string | null;
 };

@@ -2,7 +2,7 @@
 
 import { useState, memo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 
 import { WishlistItem } from '../types';
@@ -14,9 +14,13 @@ type WishlistItemCardProps = {
 };
 
 const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [isBooking, setIsBooking] = useState(false);
+
+  const currentUserId = session?.user?.id;
+
+  const isBookedByCurrentUser = item.isBooked && item.bookedById === currentUserId;
 
   const handleBook = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -43,6 +47,18 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
     } finally {
       setIsBooking(false);
     }
+  };
+
+  const handleBookingClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!session) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      signIn('google', { callbackUrl: window.location.href });
+      return;
+    }
+
+    handleBook(e);
   };
 
   return (
@@ -91,7 +107,12 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
 
           {/* Booking */}
           <div className="absolute top-3 right-3 pointer-events-auto">
-            <Button onClick={handleBook} disabled={isBooking} variant="secondary" size="sm">
+            <Button
+              onClick={handleBookingClick}
+              disabled={isBooking || status === 'loading'}
+              variant="secondary"
+              size="sm"
+            >
               <Gift className="mr-2 h-4 w-4" />
               {isBooking ? 'Booking...' : 'Book this gift'}
             </Button>
@@ -110,7 +131,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
           <div className="absolute inset-0 bg-yellow/70" />
           <div className="absolute top-3 right-3">
             <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-2 px-3 font-secondary text-sm">
-              Reserved
+              {isBookedByCurrentUser ? ' You reserved' : 'Reserved'}
             </span>
           </div>
         </div>
