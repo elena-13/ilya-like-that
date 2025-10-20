@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import { WishlistItem } from '../types';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Gift } from 'lucide-react';
+import { ExternalLink, Gift, X } from 'lucide-react';
 
 type WishlistItemCardProps = {
   item: WishlistItem;
@@ -15,8 +15,11 @@ type WishlistItemCardProps = {
 
 const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const { data: session, status } = useSession();
+
   const router = useRouter();
+
   const [isBooking, setIsBooking] = useState(false);
+  const [isUnbooking, setIsUnbooking] = useState(false);
 
   const currentUserId = session?.user?.id;
 
@@ -61,6 +64,33 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
     handleBook(e);
   };
 
+  const handleUnbook = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation(); // Важно, чтобы не сработали другие клики
+
+    setIsUnbooking(true);
+    try {
+      const response = await fetch('/api/unbook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId: item.id }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error || 'Failed to cancel the booking.');
+      }
+
+      // Обновляем страницу, чтобы увидеть изменения
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsUnbooking(false);
+    }
+  };
+
   return (
     <article
       className="
@@ -92,7 +122,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
 
           {item.link && (
             <div className="absolute top-3 left-3 pointer-events-auto">
-              <Button asChild variant="secondary" size="sm">
+              <Button asChild variant="secondary" className="cursor-pointer" size="sm">
                 <a
                   href={item.link}
                   target="_blank"
@@ -111,9 +141,10 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
               onClick={handleBookingClick}
               disabled={isBooking || status === 'loading'}
               variant="secondary"
+              className="cursor-pointer"
               size="sm"
             >
-              <Gift className="mr-2 h-4 w-4" />
+              <Gift className="h-4 w-4" />
               {isBooking ? 'Booking...' : 'Book this gift'}
             </Button>
           </div>
@@ -129,11 +160,23 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
           aria-label="Reserved"
         >
           <div className="absolute inset-0 bg-yellow/70" />
-          <div className="absolute top-3 right-3">
-            <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-2 px-3 font-secondary text-sm">
+          <div className="absolute top-3 left-3">
+            <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-2 px-3 font-secondary text-xs">
               {isBookedByCurrentUser ? ' You reserved' : 'Reserved'}
             </span>
           </div>
+          {isBookedByCurrentUser && (
+            <div className="absolute top-3 right-3 pointer-events-auto">
+              <Button
+                onClick={handleUnbook}
+                disabled={isUnbooking}
+                size="sm"
+                className="bg-navy text-white rounded-full  font-secondary text-xs cursor-pointer"
+              >
+                <X />
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </article>
