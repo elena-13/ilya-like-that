@@ -3,6 +3,7 @@ import { kv } from '@vercel/kv';
 
 import { BOOKINGS_KEY } from '@/features/wishlist/constants';
 import { getSession } from '@/lib/auth-utils';
+import { revalidatePath } from 'next/cache';
 
 /**
  * POST /api/unbook
@@ -35,6 +36,8 @@ export async function POST(req: Request) {
     // 4. Если все проверки пройдены, удаляем поле из хеша
     // kv.hdel вернет 1, если поле было удалено, и 0, если его не существовало.
     await kv.hdel(BOOKINGS_KEY, itemId);
+
+    revalidatePath('/');
 
     return NextResponse.json({ success: true, message: 'Booking cancelled.' }, { status: 200 });
   } catch (error) {
