@@ -1,23 +1,12 @@
 import Image from 'next/image';
-import { kv } from '@vercel/kv';
 
 import WishlistList from '@/features/wishlist/components/WishlistList';
-import { WishlistItem } from '@/features/wishlist/types';
 import { StarsField } from '@/features/wishlist/components/StarsField';
 import { AuthSlot } from '@/features/auth/AuthSlot';
-
-async function getWishlistItems(): Promise<WishlistItem[]> {
-  try {
-    const items = await kv.get<WishlistItem[]>('wishlist');
-    return items || [];
-  } catch (error) {
-    console.error('Failed to fetch wishlist items:', error);
-    return [];
-  }
-}
+import { getEnrichedWishlistItems } from '@/features/wishlist/data/getEnrichedWishlistItems';
 
 export default async function Home() {
-  const items = await getWishlistItems();
+  const items = await getEnrichedWishlistItems();
 
   return (
     <main className="min-h-screen">

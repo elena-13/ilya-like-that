@@ -1,43 +1,45 @@
 import { NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
 
+import { BOOKINGS_KEY } from '@/features/wishlist/constants';
 import { getSession } from '@/lib/auth-utils';
-import { WishlistItem } from '@/features/wishlist/types';
 
+/**
+ * POST /api/book
+ * Body: { itemId: string }
+ * Logic: set booking only if not already set (atomic).
+ */
 export async function POST(req: Request) {
   try {
+    // 1) Auth check
     const session = await getSession();
-
     if (!session?.user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
+    // 2) Parse + validate input
     const { itemId } = await req.json();
-    if (!itemId) {
+    if (typeof itemId !== 'string' || !itemId.trim()) {
       return new NextResponse('Item ID is required', { status: 400 });
     }
 
-    const wishlist = await kv.get<WishlistItem[]>('wishlist');
-    if (!wishlist) {
-      return new NextResponse('Wishlist not found', { status: 404 });
-    }
+    // 3) Normalize user id (ensure string)
+    const userId = String(session.user.id);
 
-    const itemIndex = wishlist.findIndex((item) => item.id === itemId);
-    if (itemIndex === -1) {
-      return new NextResponse('Item not found in wishlist', { status: 404 });
-    }
+    // 4) Atomic write: set only if not exists
+    // Returns 1 if written, 0 if field already exists
+    const wrote = await kv.hsetnx(BOOKINGS_KEY, itemId, userId);
 
-    if (wishlist[itemIndex].isBooked) {
+    if (wrote === 0) {
+      // Already booked by someone else
       return new NextResponse('Item is already booked', { status: 409 });
     }
 
-    wishlist[itemIndex].isBooked = true;
-
-    await kv.set('wishlist', wishlist);
-
-    return NextResponse.json(wishlist[itemIndex], { status: 200 });
-  } catch (error) {
-    console.error('[BOOK_POST]', error);
+    // 5) OK
+    return NextResponse.json({ success: true, itemId, bookedBy: userId });
+  } catch (err) {
+    // Avoid leaking internals in responses, log server-side only
+    console.error('[BOOK_POST]', err);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
