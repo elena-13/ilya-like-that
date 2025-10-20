@@ -114,14 +114,15 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
 
       {!item.isBooked && (
         <div
-          className="pointer-events-none absolute inset-0 z-10 opacity-0
-                 transition-opacity duration-300
-                 group-hover/card:opacity-100"
+          className="pointer-events-auto absolute inset-0 z-10 opacity-100
+               transition-opacity duration-300
+               lg:pointer-events-none lg:opacity-0
+               lg:group-hover/card:opacity-100"
         >
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 lg:bg-black/40" />
 
           {item.link && (
-            <div className="absolute top-3 left-3 pointer-events-auto">
+            <div className="absolute top-3 left-3">
               <Button asChild variant="secondary" className="cursor-pointer" size="sm">
                 <a
                   href={item.link}
@@ -136,7 +137,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
           )}
 
           {/* Booking */}
-          <div className="absolute top-3 right-3 pointer-events-auto">
+          <div className="absolute top-3 right-3">
             <Button
               onClick={handleBookingClick}
               disabled={isBooking || status === 'loading'}
