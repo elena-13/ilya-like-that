@@ -3,6 +3,7 @@ import { kv } from '@vercel/kv';
 
 import { BOOKINGS_KEY } from '@/features/wishlist/constants';
 import { getSession } from '@/lib/auth-utils';
+import { revalidatePath } from 'next/cache';
 
 /**
  * POST /api/book
@@ -34,6 +35,8 @@ export async function POST(req: Request) {
       // Already booked by someone else
       return new NextResponse('Item is already booked', { status: 409 });
     }
+
+    revalidatePath('/');
 
     // 5) OK
     return NextResponse.json({ success: true, itemId, bookedBy: userId });
