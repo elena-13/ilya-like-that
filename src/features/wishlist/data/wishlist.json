@@ -1,7 +1,8 @@
 [
   {
     "id": "1",
-    "name": "Moonie NATUR 2.0 szumiący miś z lampką",
+    "brand": "Moonie",
+    "name": "Humming Bear NATUR 2.0 with Lamp",
     "link": "https://www.dobreliski.pl/pl/p/Moonie-NATUR-2.0-szumiacy-mis-z-lampka-SAND/33115",
     "image": "/images/item-1.jpg",
     "isBooked": false,
@@ -9,23 +10,26 @@
   },
   {
     "id": "2",
-    "name": "Lovevery The Looker Play Kit",
-    "link": "https://lovevery.eu/products/the-play-kits-the-looker",
+    "brand": "Lovevery",
+    "name": "The Play Gym",
+    "link": "https://lovevery.eu/products/the-play-gym",
     "image": "/images/item-2.jpg",
     "isBooked": false,
     "bookedBy": null
   },
   {
     "id": "3",
-    "name": "Artipoppe",
-    "link": "",
+    "brand": "Zara Home",
+    "name": "Striped Baby Sleeping Bag",
+    "link": "https://www.zarahome.com/pl/spiworek-do-spania-dla-niemowlat-w-paski-l44605501",
     "image": "/images/item-3.jpg",
     "isBooked": false,
     "bookedBy": null
   },
   {
     "id": "4",
-    "name": "Zestaw krzesła Tripp Trapp® + zestaw dla noworodków",
+    "brand": "Stokke Tripp Trapp",
+    "name": "Newborn Complete – High Chair Bundle with Baby Set² & Newborn Set",
     "link": "https://www.stokke.com/POL/pl-pl/do-siedzenia/stokke-high-chair-bundles/tripp-trapp-newborn-complete.html",
     "image": "/images/item-4.jpg",
     "isBooked": false,
@@ -33,39 +37,43 @@
   },
   {
     "id": "5",
-    "name": "Gryzak moonie MOONIE SAND",
-    "link": "",
+    "brand": "Oli & Carol",
+    "name": "Cathy the Carrot Mini Doudou-Teether",
+    "link": "https://oliandcarol.com/products/cathy-the-carrot-doudou-teether",
     "image": "/images/item-5.jpg",
     "isBooked": false,
     "bookedBy": null
   },
   {
     "id": "6",
-    "name": "Jellycat",
-    "link": "https://eu.jellycat.com",
+    "brand": "BIBS",
+    "name": "BIBS Colour Round Pacifier – Natural Latex – Size 1 (0–6 mo)",
+    "link": "https://bibsworld.com/pl-pl/products/bibs-colour-petrol",
     "image": "/images/item-6.jpg",
     "isBooked": false,
     "bookedBy": null
   },
   {
     "id": "7",
-    "name": "Кроватка Sebra Bed Baby & Jr.",
-    "link": "https://sebra-interior.com/",
+    "brand": "Oli & Carol",
+    "name": "Wally the Watermelon Baby Teether",
+    "link": "https://oliandcarol.com/collections/baby-toys-0-6-months/products/wally-the-watermelon",
     "image": "/images/item-7.jpg",
     "isBooked": false,
     "bookedBy": null
   },
   {
     "id": "8",
-    "name": "Anex Wom Śpiworek Do Wózka 0m+",
-    "link": "https://babyhit.pl/product-pol-66468-Anex-Wom-Spiworek-Do-Wozka-0m-Light-Grey.html",
+    "brand": "Anex",
+    "name": "Footmuff WOM 0+ (Light gray)",
+    "link": "https://anexbaby.com/pl-en/accessories/footmuff-wom-0+?color=light-gray",
     "image": "/images/item-8.jpg",
     "isBooked": false,
     "bookedBy": null
   },
   {
     "id": "9",
-    "name": "LAMPKA NOCNA USB ZE SŁONIEM",
+    "name": "USB Night Lamp with Elephant",
     "link": "https://www.zarahome.com/pl/lampka-nocna-usb-ze-sloniem-l46699047",
     "image": "/images/item-9.jpg",
     "isBooked": false,
@@ -73,9 +81,63 @@
   },
   {
     "id": "10",
-    "name": "ALBUM WSPOMNIEŃ DZIECIĘCYCH SŁONIE",
+    "name": "Baby Elephant Memory Album",
     "link": "https://www.zarahome.com/pl/album-wspomnien-dzieciecych-slonie-l43600111",
     "image": "/images/item-10.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "11",
+    "brand": "BIBS",
+    "name": "BIBS Pacifier Box – Petrol",
+    "link": "https://bibsworld.com/pl-pl/products/bibs-pacifier-box-petrol?variant=42807195533469",
+    "image": "/images/item-11.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "12",
+    "brand": "BIBS",
+    "name": "BIBS Pacifier Clip",
+    "link": "https://bibsworld.com/pl-pl/products/bibs-pacifier-clip-petrol-baby-blue?variant=47500032442696",
+    "image": "/images/item-12.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "13",
+    "brand": "BIBS",
+    "name": "De Lux GLOW Pacifier - Cloud",
+    "link": "https://bibsworld.com/products/bibs-de-lux-cloud-glow",
+    "image": "/images/item-13.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "14",
+    "brand": "Sebra",
+    "name": "Activity rattle with mirror, Billy the bee",
+    "link": "https://sebra-interior.com/products/activity-rattle-with-mirror-billy-the-bee-sebra-play-yellow",
+    "image": "/images/item-14.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "15",
+    "brand": "",
+    "name": "Baby Mobile with Whales",
+    "link": "https://bursztynhome.com/products/bezpieczna-zabawka-z-miekkim-dzwiekiem?variant=52987564753219&currency=PLN&utm_source=google&utm_medium=cpc&utm_campaign=google%2Bshopping&gad_source=1&gad_campaignid=22298686534&gbraid=0AAAAA-57vKygtsiCkUiaDhPSRu5BGIjKF&gclid=CjwKCAjwgeLHBhBuEiwAL5gNEVsm3EOwoex9oqI8UbHZpVvST9wYBUqw83lK2gJoyoGwYfEDAAFyRBoC2WQQAvD_BwE",
+    "image": "/images/item-15.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "16",
+    "brand": "",
+    "name": "Little Bear Baby Blanket",
+    "link": "https://www.nordicnest.pl/marki/klippan-yllefabrik/koc-dzieciecy-little-bear-/?variantId=18406-01",
+    "image": "/images/item-16.jpg",
     "isBooked": false,
     "bookedBy": null
   }
