@@ -73,6 +73,7 @@
   },
   {
     "id": "9",
+    "brand": "Zara Home",
     "name": "USB Night Lamp with Elephant",
     "link": "https://www.zarahome.com/pl/lampka-nocna-usb-ze-sloniem-l46699047",
     "image": "/images/item-9.jpg",
@@ -81,6 +82,7 @@
   },
   {
     "id": "10",
+    "brand": "Zara Home",
     "name": "Baby Elephant Memory Album",
     "link": "https://www.zarahome.com/pl/album-wspomnien-dzieciecych-slonie-l43600111",
     "image": "/images/item-10.jpg",
@@ -138,6 +140,15 @@
     "name": "Little Bear Baby Blanket",
     "link": "https://www.nordicnest.pl/marki/klippan-yllefabrik/koc-dzieciecy-little-bear-/?variantId=18406-01",
     "image": "/images/item-16.jpg",
+    "isBooked": false,
+    "bookedBy": null
+  },
+  {
+    "id": "17",
+    "brand": "PHILIPS",
+    "name": "PHILIPS Seria 5000 HU5710/03",
+    "link": "https://www.home-appliances.philips/pl/pl/p/HU5710_03",
+    "image": "/images/item-17.jpg",
     "isBooked": false,
     "bookedBy": null
   }
