@@ -1,8 +1,13 @@
 import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
+import Image from 'next/image';
+import { ExternalLink } from 'lucide-react';
 
 import wishlistData from '@/features/wishlist/data/wishlist.json';
 import { getItemById } from '@/features/wishlist/data/getItemById';
+import ItemReservation from '@/features/wishlist/components/ItemReservation';
+import PageHeader from '@/widgets/PageHeader/PageHeader';
+import { Button } from '@/components/ui/button';
 import { paths } from '@/lib/paths';
 
 type Props = {
@@ -63,9 +68,41 @@ export default async function ItemPage({ params }: Props) {
   }
 
   return (
-    <div>
-      <h1>{item.name}</h1>
-      <p>This is the item page.</p>
-    </div>
+    <>
+      <PageHeader />
+      <main className="mx-auto grid max-w-5xl gap-8 px-4 py-8 md:grid-cols-2 md:py-12">
+        {/* Item image */}
+        <div className="overflow-hidden rounded-4xl bg-white ring-1 ring-black/5 shadow-sm">
+          <Image
+            src={item.image}
+            alt={item.name}
+            width={800}
+            height={1200}
+            sizes="(min-width:768px) 50vw, 100vw"
+            className="h-auto w-full object-cover"
+            priority
+          />
+        </div>
+
+        {/* Details + reservation */}
+        <div className="flex flex-col gap-5">
+          <div>
+            <p className="font-secondary text-sm text-navy/60">{item.brand}</p>
+            <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.name}</h1>
+          </div>
+
+          {item.link && (
+            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+              <a href={item.link} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-4 w-4" />
+                View product
+              </a>
+            </Button>
+          )}
+
+          <ItemReservation itemId={item.id} isBooked={item.isBooked} bookedBy={item.bookedBy} />
+        </div>
+      </main>
+    </>
   );
 }
