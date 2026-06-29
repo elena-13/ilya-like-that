@@ -1,6 +1,7 @@
 [
   {
     "id": "1",
+    "slug": "playstation-5-pro",
     "brand": "Moonie",
     "name": "Humming Bear NATUR 2.0 with Lamp",
     "link": "https://www.dobreliski.pl/pl/p/Moonie-NATUR-2.0-szumiacy-mis-z-lampka-SAND/33115",
@@ -10,6 +11,7 @@
   },
   {
     "id": "2",
+    "slug": "the-play-gym",
     "brand": "Lovevery",
     "name": "The Play Gym",
     "link": "https://lovevery.eu/products/the-play-gym",
@@ -19,6 +21,7 @@
   },
   {
     "id": "3",
+    "slug": "striped-baby-sleeping-bag",
     "brand": "Zara Home",
     "name": "Striped Baby Sleeping Bag",
     "link": "https://www.zarahome.com/pl/spiworek-do-spania-dla-niemowlat-w-paski-l44605501",
@@ -28,6 +31,7 @@
   },
   {
     "id": "4",
+    "slug": "stokke-tripp-trapp",
     "brand": "Stokke Tripp Trapp",
     "name": "Newborn Complete – High Chair Bundle with Baby Set² & Newborn Set",
     "link": "https://www.stokke.com/POL/pl-pl/do-siedzenia/stokke-high-chair-bundles/tripp-trapp-newborn-complete.html",
@@ -37,6 +41,7 @@
   },
   {
     "id": "5",
+    "slug": "oli-and-carol-cathy-the-carrot",
     "brand": "Oli & Carol",
     "name": "Cathy the Carrot Mini Doudou-Teether",
     "link": "https://oliandcarol.com/products/cathy-the-carrot-doudou-teether",
@@ -46,6 +51,7 @@
   },
   {
     "id": "6",
+    "slug": "bibs-colour-round-pacifier",
     "brand": "BIBS",
     "name": "BIBS Colour Round Pacifier – Natural Latex – Size 1 (0–6 mo)",
     "link": "https://bibsworld.com/pl-pl/products/bibs-colour-petrol",
@@ -55,6 +61,7 @@
   },
   {
     "id": "7",
+    "slug": "oli-and-carol-wally-the-watermelon",
     "brand": "Oli & Carol",
     "name": "Wally the Watermelon Baby Teether",
     "link": "https://oliandcarol.com/collections/baby-toys-0-6-months/products/wally-the-watermelon",
@@ -64,6 +71,7 @@
   },
   {
     "id": "8",
+    "slug": "anex-footmuff-wom-0+",
     "brand": "Anex",
     "name": "Footmuff WOM 0+ (Light gray)",
     "link": "https://anexbaby.com/pl-en/accessories/footmuff-wom-0+?color=light-gray",
@@ -73,6 +81,7 @@
   },
   {
     "id": "9",
+    "slug": "zara-home-usb-night-lamp",
     "brand": "Zara Home",
     "name": "USB Night Lamp with Elephant",
     "link": "https://www.zarahome.com/pl/lampka-nocna-usb-ze-sloniem-l46699047",
@@ -82,6 +91,7 @@
   },
   {
     "id": "10",
+    "slug": "zara-home-baby-elephant-memory-album",
     "brand": "Zara Home",
     "name": "Baby Elephant Memory Album",
     "link": "https://www.zarahome.com/pl/album-wspomnien-dzieciecych-slonie-l43600111",
@@ -91,6 +101,7 @@
   },
   {
     "id": "11",
+    "slug": "bibs-pacifier-box-petrol",
     "brand": "BIBS",
     "name": "BIBS Pacifier Box – Petrol",
     "link": "https://bibsworld.com/pl-pl/products/bibs-pacifier-box-petrol?variant=42807195533469",
@@ -100,6 +111,7 @@
   },
   {
     "id": "12",
+    "slug": "bibs-pacifier-clip-petrol-baby-blue",
     "brand": "BIBS",
     "name": "BIBS Pacifier Clip",
     "link": "https://bibsworld.com/pl-pl/products/bibs-pacifier-clip-petrol-baby-blue?variant=47500032442696",
@@ -109,6 +121,7 @@
   },
   {
     "id": "13",
+    "slug": "bibs-de-lux-cloud-glow",
     "brand": "BIBS",
     "name": "De Lux GLOW Pacifier - Cloud",
     "link": "https://bibsworld.com/products/bibs-de-lux-cloud-glow",
@@ -118,6 +131,7 @@
   },
   {
     "id": "14",
+    "slug": "sebra-activity-rattle-with-mirror",
     "brand": "Sebra",
     "name": "Activity rattle with mirror, Billy the bee",
     "link": "https://sebra-interior.com/products/activity-rattle-with-mirror-billy-the-bee-sebra-play-yellow",
@@ -127,6 +141,7 @@
   },
   {
     "id": "15",
+    "slug": "bursztynhome-baby-mobile-with-whales",
     "brand": "",
     "name": "Baby Mobile with Whales",
     "link": "https://bursztynhome.com/products/bezpieczna-zabawka-z-miekkim-dzwiekiem?variant=52987564753219&currency=PLN&utm_source=google&utm_medium=cpc&utm_campaign=google%2Bshopping&gad_source=1&gad_campaignid=22298686534&gbraid=0AAAAA-57vKygtsiCkUiaDhPSRu5BGIjKF&gclid=CjwKCAjwgeLHBhBuEiwAL5gNEVsm3EOwoex9oqI8UbHZpVvST9wYBUqw83lK2gJoyoGwYfEDAAFyRBoC2WQQAvD_BwE",
@@ -136,6 +151,7 @@
   },
   {
     "id": "16",
+    "slug": "nordicnest-little-bear-baby-blanket",
     "brand": "",
     "name": "Little Bear Baby Blanket",
     "link": "https://www.nordicnest.pl/marki/klippan-yllefabrik/koc-dzieciecy-little-bear-/?variantId=18406-01",
@@ -145,6 +161,7 @@
   },
   {
     "id": "17",
+    "slug": "philips-seria-5000-hu5710-03",
     "brand": "PHILIPS",
     "name": "PHILIPS Seria 5000 HU5710/03",
     "link": "https://www.home-appliances.philips/pl/pl/p/HU5710_03",

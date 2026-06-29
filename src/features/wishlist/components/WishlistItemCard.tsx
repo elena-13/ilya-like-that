@@ -8,6 +8,8 @@ import Image from 'next/image';
 import { WishlistItem } from '../types';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Gift, X } from 'lucide-react';
+import Link from 'next/link';
+import { paths } from '@/lib/paths';
 
 type WishlistItemCardProps = {
   item: WishlistItem;
@@ -22,8 +24,9 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const [isUnbooking, setIsUnbooking] = useState(false);
 
   const currentUserId = session?.user?.id;
-
   const isBookedByCurrentUser = item.isBooked && item.bookedById === currentUserId;
+
+  const itemUrl = paths.item(item.slug, item.id);
 
   const handleBook = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -99,14 +102,16 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       "
       aria-label={item.name}
     >
-      <Image
-        src={item.image}
-        alt={item.name}
-        width={800}
-        height={1200}
-        sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-        className="w-full h-auto object-cover"
-      />
+      <Link href={itemUrl} className="block w-full h-full focus:outline-none">
+        <Image
+          src={item.image}
+          alt={item.name}
+          width={800}
+          height={1200}
+          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+          className="w-full h-auto object-cover"
+        />
+      </Link>
 
       <div className="px-5 py-3">
         <h3 className="text-navy font-bold leading-snug line-clamp-2">{item.name}</h3>
