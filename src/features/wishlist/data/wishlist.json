@@ -168,5 +168,15 @@
     "image": "/images/item-17.jpg",
     "isBooked": false,
     "bookedBy": null
+  },
+  {
+    "id": "18",
+    "slug": "woodies-baby-crib",
+    "brand": "WOODIES",
+    "name": "Łóżeczko niemowlęce Noble Cot 120×60 vintage",
+    "link": "https://woodies.pl/produkt/lozeczko-niemowlece-noble-cot-vintage-120x60",
+    "image": "/images/item-18.jpg",
+    "isBooked": false,
+    "bookedBy": null
   }
 ]
