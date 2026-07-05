@@ -1,9 +1,6 @@
 import { kv } from '@vercel/kv';
 import { BOOKINGS_KEY, WISHLIST_KEY } from '@/features/wishlist/constants';
-import type { WishlistItem } from '@/features/wishlist/types';
-
-// Base shape stored in KV (no booking info)
-type BaseItem = Omit<WishlistItem, 'isBooked' | 'bookedById'>;
+import type { WishlistItem, WishlistItemBase } from '@/features/wishlist/types';
 
 /**
  * Load wishlist and attach booking flags in one pass.
@@ -11,7 +8,7 @@ type BaseItem = Omit<WishlistItem, 'isBooked' | 'bookedById'>;
  */
 export async function getEnrichedWishlistItems(): Promise<WishlistItem[]> {
   // Fetch base wishlist items (without booking info)
-  const baseItems = await kv.get<BaseItem[]>(WISHLIST_KEY);
+  const baseItems = await kv.get<WishlistItemBase[]>(WISHLIST_KEY);
 
   if (!baseItems) {
     return [];

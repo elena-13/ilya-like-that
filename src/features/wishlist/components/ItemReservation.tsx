@@ -11,7 +11,7 @@ type ItemReservationProps = {
   itemId: string;
   isBooked: boolean;
   /** User id of the person who booked the item, or null when available. */
-  bookedBy: string | null;
+  bookedById: string | null;
 };
 
 /**
@@ -19,7 +19,7 @@ type ItemReservationProps = {
  * Booking state lives in Redis, so we POST to the API and then
  * router.refresh() to pull the fresh server-rendered state.
  */
-export default function ItemReservation({ itemId, isBooked, bookedBy }: ItemReservationProps) {
+export default function ItemReservation({ itemId, isBooked, bookedById }: ItemReservationProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -27,7 +27,7 @@ export default function ItemReservation({ itemId, isBooked, bookedBy }: ItemRese
   const [isUnbooking, setIsUnbooking] = useState(false);
 
   const currentUserId = session?.user?.id;
-  const isBookedByCurrentUser = isBooked && bookedBy === currentUserId;
+  const isBookedByCurrentUser = isBooked && bookedById === currentUserId;
 
   const handleBook = async () => {
     if (!session) {
