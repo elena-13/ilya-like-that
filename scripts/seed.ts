@@ -1,13 +1,11 @@
-import { kv } from '@vercel/kv';
-import wishlistData from '../src/features/wishlist/data/wishlist.json';
-import { WISHLIST_KEY } from '@/features/wishlist/constants';
+import { populateWishlistFromJson } from './wishlist-populate';
 
 async function main() {
-  console.log('Seeding wishlist data to Vercel KV...');
+  console.log('🌱 Seeding wishlist (per-item model) from wishlist.json...');
 
-  await kv.set(WISHLIST_KEY, wishlistData);
+  const { count, nextId } = await populateWishlistFromJson();
 
-  console.log('✅ Data seeded successfully!');
+  console.log(`✅ Seeded ${count} items. Next id will be ${nextId}.`);
 }
 
 main().catch((err) => {

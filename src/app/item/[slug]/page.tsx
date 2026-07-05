@@ -100,7 +100,7 @@ export default async function ItemPage({ params }: Props) {
             </Button>
           )}
 
-          <ItemReservation itemId={item.id} isBooked={item.isBooked} bookedBy={item.bookedBy} />
+          <ItemReservation itemId={item.id} isBooked={item.isBooked} bookedById={item.bookedById} />
         </div>
       </main>
     </>

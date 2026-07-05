@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { signOut } from 'next-auth/react';
-import type { User } from 'next-auth';
+import type { Session } from 'next-auth';
+import { LogOut, Settings } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -12,9 +14,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { paths } from '@/lib/paths';
 
 type UserMenuProps = {
-  user: User;
+  // Session user carries our custom fields (id, isAdmin) unlike next-auth's base User.
+  user: Session['user'];
 };
 
 function initials(name?: string | null, email?: string | null) {
@@ -46,7 +50,16 @@ export default function UserMenu({ user }: UserMenuProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {user.isAdmin && (
+          <DropdownMenuItem asChild className="cursor-pointer">
+            <Link href={paths.admin()}>
+              <Settings className="h-4 w-4" />
+              Manage wishlist
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onSelect={() => signOut()} className="cursor-pointer">
+          <LogOut className="h-4 w-4" />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
