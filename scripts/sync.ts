@@ -1,22 +1,13 @@
-import { kv } from '@vercel/kv';
-
-import localWishlistData from '../src/features/wishlist/data/wishlist.json';
-import { WISHLIST_KEY } from '@/features/wishlist/constants';
-import type { WishlistItemBase } from '@/features/wishlist/types';
+import { populateWishlistFromJson } from './wishlist-populate';
 
 async function main() {
-  console.log('🚀 Starting wishlist synchronization...');
+  console.log('🚀 Syncing wishlist catalog from wishlist.json...');
 
-  // Bookings live in the separate `bookings` hash, so syncing the catalog is a
-  // straight overwrite of the base items — nothing to preserve here.
-  const items: WishlistItemBase[] = localWishlistData.map(
-    ({ id, slug, brand, name, image, link }) => ({ id, slug, brand, name, image, link }),
-  );
+  // Bookings live in the separate `bookings` hash, so re-populating the catalog
+  // from JSON is safe — nothing to preserve here.
+  const { count, nextId } = await populateWishlistFromJson();
 
-  console.log(`Saving ${items.length} items to Vercel KV under key: ${WISHLIST_KEY}`);
-  await kv.set(WISHLIST_KEY, items);
-
-  console.log('✅ Synchronization complete!');
+  console.log(`✅ Synced ${count} items. Next id will be ${nextId}.`);
 }
 
 main().catch((err) => {
