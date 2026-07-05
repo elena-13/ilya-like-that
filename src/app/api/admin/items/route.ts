@@ -2,15 +2,19 @@ import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
 import { requireAdmin } from '@/lib/auth-utils';
-import { addItem, getWishlist } from '@/lib/wishlist-db';
+import { addItem, getWishlistPage } from '@/lib/wishlist-db';
 import { parseCreateInput } from '@/features/wishlist/validation';
+import { parsePageParams } from '@/features/admin/pagination';
 
-/** GET /api/admin/items — list all items (admin only). */
-export async function GET() {
+/** GET /api/admin/items?page&pageSize — one page of items (admin only). */
+export async function GET(request: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
 
-  return NextResponse.json(await getWishlist());
+  const { searchParams } = new URL(request.url);
+  const { page, pageSize } = parsePageParams(searchParams);
+
+  return NextResponse.json(await getWishlistPage(page, pageSize));
 }
 
 /** POST /api/admin/items — create an item (admin only). */

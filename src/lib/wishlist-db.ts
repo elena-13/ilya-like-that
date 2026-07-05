@@ -32,6 +32,32 @@ export async function getWishlist(): Promise<WishlistItemBase[]> {
   return items.filter((item): item is WishlistItemBase => item != null);
 }
 
+export type Page<T> = {
+  items: T[];
+  total: number;
+  page: number; // 1-based
+  pageSize: number;
+};
+
+/**
+ * One page of items in display order. Reads only this page's ids from the
+ * order list (LRANGE) then MGETs them — cost is O(pageSize), not O(total).
+ */
+export async function getWishlistPage(page: number, pageSize: number): Promise<Page<WishlistItemBase>> {
+  const total = await kv.llen(WISHLIST_ORDER_KEY);
+  const start = (page - 1) * pageSize;
+  const ids = (await kv.lrange<string>(WISHLIST_ORDER_KEY, start, start + pageSize - 1)).map(String);
+
+  const items =
+    ids.length === 0
+      ? []
+      : (await kv.mget<WishlistItemBase[]>(...ids.map(wishlistItemKey))).filter(
+          (item): item is WishlistItemBase => item != null,
+        );
+
+  return { items, total, page, pageSize };
+}
+
 /** A single item by id, or null if it doesn't exist. */
 export async function getById(id: string): Promise<WishlistItemBase | null> {
   return (await kv.get<WishlistItemBase>(wishlistItemKey(id))) ?? null;
