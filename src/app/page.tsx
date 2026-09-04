@@ -3,10 +3,12 @@ import Image from 'next/image';
 import WishlistList from '@/features/wishlist/components/WishlistList';
 import { StarsField } from '@/features/wishlist/components/StarsField';
 import { AuthSlot } from '@/features/auth/AuthSlot';
-import { getEnrichedWishlistItems } from '@/features/wishlist/data/getEnrichedWishlistItems';
+import { wishlistItems } from '@/data/collections/wishlist-items';
+// import { getEnrichedWishlistItems } from '@/features/wishlist/data/getEnrichedWishlistItems';
 
 export default async function Home() {
-  const items = await getEnrichedWishlistItems();
+  // const items = await getEnrichedWishlistItems();
+  const items = wishlistItems;
 
   return (
     <main className="min-h-screen">
