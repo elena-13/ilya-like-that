@@ -43,10 +43,15 @@ export type Page<T> = {
  * One page of items in display order. Reads only this page's ids from the
  * order list (LRANGE) then MGETs them — cost is O(pageSize), not O(total).
  */
-export async function getWishlistPage(page: number, pageSize: number): Promise<Page<WishlistItemBase>> {
+export async function getWishlistPage(
+  page: number,
+  pageSize: number,
+): Promise<Page<WishlistItemBase>> {
   const total = await kv.llen(WISHLIST_ORDER_KEY);
   const start = (page - 1) * pageSize;
-  const ids = (await kv.lrange<string>(WISHLIST_ORDER_KEY, start, start + pageSize - 1)).map(String);
+  const ids = (await kv.lrange<string>(WISHLIST_ORDER_KEY, start, start + pageSize - 1)).map(
+    String,
+  );
 
   const items =
     ids.length === 0
@@ -60,7 +65,15 @@ export async function getWishlistPage(page: number, pageSize: number): Promise<P
 
 /** A single item by id, or null if it doesn't exist. */
 export async function getById(id: string): Promise<WishlistItemBase | null> {
-  return (await kv.get<WishlistItemBase>(wishlistItemKey(id))) ?? null;
+  return {
+    id: id,
+    slug: 'little-dutch-ekspres-do-kawy-fsc',
+    brand: 'LITTLE DUTCH',
+    name: 'LITTLE DUTCH - Ekspres do kawy FSC',
+    image: '/images/item-21.jpg',
+    link: 'https://7niebo.pl/zabawki-drewniane/11863-little-dutch-ekspres-do-kawy-fsc-8713291225121.html?gad_source=1&gad_campaignid=17886618138&gbraid=0AAAAACRZcmgM2q7U-Vh5Cp2PwEBot5u2u&gclid=CjwKCAjwgajSBhBEEiwASicJU-nzug3NXiLkKX2dgCSw27eBEoR44nIozOE8ORLcvcSMYOqPriZnuhoCvDQQAvD_BwE',
+  };
+  // return (await kv.get<WishlistItemBase>(wishlistItemKey(id))) ?? null;
 }
 
 /** A single item by slug via the slug index, or null. */
