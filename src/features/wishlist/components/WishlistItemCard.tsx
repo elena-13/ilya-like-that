@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 
-import { WishlistItem } from '../types';
+// import { WishlistItem } from '../types';
+import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Gift, X } from 'lucide-react';
 import Link from 'next/link';
 import { paths } from '@/lib/paths';
+import { BookButton } from './BookButton';
 
 type WishlistItemCardProps = {
   item: WishlistItem;
@@ -24,9 +26,9 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const [isUnbooking, setIsUnbooking] = useState(false);
 
   const currentUserId = session?.user?.id;
-  const isBookedByCurrentUser = item.isBooked && item.bookedById === currentUserId;
+  // const isBookedByCurrentUser = item.isBooked && item.bookedById === currentUserId;
 
-  const itemUrl = paths.item(item.slug, item.id);
+  // const itemUrl = paths.item(item.slug, item.id);
 
   const handleBook = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -69,7 +71,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
 
   const handleUnbook = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    e.stopPropagation(); // Важно, чтобы не сработали другие клики
+    e.stopPropagation(); // Prevent other click handlers from firing
 
     setIsUnbooking(true);
     try {
@@ -84,7 +86,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         throw new Error(error || 'Failed to cancel the booking.');
       }
 
-      // Обновляем страницу, чтобы увидеть изменения
+      // Refresh the page to show the changes
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -100,12 +102,12 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         group/card relative mb-4 inline-block w-full overflow-hidden
         rounded-4xl bg-white ring-1 ring-black/5 shadow-sm focus:outline-none
       "
-      aria-label={item.name}
+      aria-label={item.title}
     >
-      <Link href={itemUrl} className="block w-full h-full focus:outline-none">
+      <Link href="/" className="block w-full h-full focus:outline-none">
         <Image
-          src={item.image}
-          alt={item.name}
+          src="/images/image-22.webp"
+          alt={item.title}
           width={800}
           height={1200}
           sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
@@ -114,17 +116,17 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       </Link>
 
       <div className="px-5 py-3">
-        <h3 className="text-navy font-bold leading-snug line-clamp-2">{item.name}</h3>
+        <h3 className="text-navy font-bold leading-snug line-clamp-2">{item.title}</h3>
       </div>
 
-      {!item.isBooked && (
+      {item.status === 'available' && (
         <>
           {/* Mobile */}
           <div className="md:hidden absolute top-3 right-3 z-10 flex gap-2">
-            {item.link && (
+            {item.shopLink && (
               <Button asChild variant="secondary" className="cursor-pointer" size="sm">
                 <a
-                  href={item.link}
+                  href={item.shopLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Open external link"
@@ -149,11 +151,11 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
           <div className="hidden md:block pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
             <div className="absolute inset-0 bg-black/40" />
 
-            {item.link && (
+            {item.shopLink && (
               <div className="absolute top-3 left-3 pointer-events-auto">
                 <Button asChild variant="secondary" className="cursor-pointer" size="sm">
                   <a
-                    href={item.link}
+                    href={item.shopLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Open external link"
@@ -165,7 +167,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
             )}
 
             <div className="absolute top-3 right-3 pointer-events-auto">
-              <Button
+              {/* <Button
                 onClick={handleBookingClick}
                 disabled={isBooking || status === 'loading'}
                 variant="secondary"
@@ -174,13 +176,14 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
               >
                 <Gift className="h-4 w-4" />
                 Book
-              </Button>
+              </Button> */}
+              <BookButton id={String(item.id)} version={item.version || 1} status={item.status} />
             </div>
           </div>
         </>
       )}
 
-      {item.isBooked && (
+      {item.status === 'booked' && (
         <div
           className="
                     absolute inset-0 grid place-items-center
@@ -191,10 +194,11 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
           <div className="absolute inset-0 bg-yellow/70" />
           <div className="absolute top-3 left-3">
             <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-2 px-3 font-secondary text-xs">
-              {isBookedByCurrentUser ? ' You reserved' : 'Reserved'}
+              reserved
+              {/* {isBookedByCurrentUser ? ' You reserved' : 'Reserved'} */}
             </span>
           </div>
-          {isBookedByCurrentUser && (
+          {/* {isBookedByCurrentUser && (
             <div className="absolute top-3 right-3 pointer-events-auto">
               <Button
                 onClick={handleUnbook}
@@ -205,7 +209,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
                 <X />
               </Button>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </article>

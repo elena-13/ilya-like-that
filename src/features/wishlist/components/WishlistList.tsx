@@ -1,6 +1,7 @@
 import WishlistItemCard from './WishlistItemCard';
 
-import { WishlistItem } from '../types';
+// import { WishlistItem } from '../types';
+import type { WishlistItem } from '@/payload-types';
 import { WishlistEmptyState } from './WishlistEmptyState';
 
 type WishlistListProps = {

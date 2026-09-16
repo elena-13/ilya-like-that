@@ -27,14 +27,14 @@ export async function POST(req: Request) {
 
     const bookedByUserId = await kv.hget<string>(BOOKINGS_KEY, itemId);
 
-    // 3. Главная проверка безопасности:
-    // Убеждаемся, что текущий пользователь — это тот, кто сделал бронь.
+    // 4) Main security check:
+    // make sure the current user is the one who made the booking.
     if (!bookedByUserId || bookedByUserId !== currentUserId) {
       return new NextResponse('Forbidden: You did not book this item.', { status: 403 });
     }
 
-    // 4. Если все проверки пройдены, удаляем поле из хеша
-    // kv.hdel вернет 1, если поле было удалено, и 0, если его не существовало.
+    // 5) All checks passed, remove the field from the hash.
+    // kv.hdel returns 1 if the field was removed and 0 if it didn't exist.
     await kv.hdel(BOOKINGS_KEY, itemId);
 
     revalidatePath('/');
