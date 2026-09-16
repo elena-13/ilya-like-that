@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import { getPayload } from 'payload';
+import config from '@payload-config';
 
 import WishlistList from '@/features/wishlist/components/WishlistList';
 import { StarsField } from '@/features/wishlist/components/StarsField';
@@ -8,7 +10,15 @@ import { wishlistItems } from '@/data/collections/wishlist-items';
 
 export default async function Home() {
   // const items = await getEnrichedWishlistItems();
-  const items = wishlistItems;
+  // const items = wishlistItems;
+
+  const payload = await getPayload({ config });
+
+  const { docs: items } = await payload.find({
+    collection: 'wishlist-items',
+    limit: 100,
+    sort: '-createdAt',
+  });
 
   return (
     <main className="min-h-screen">

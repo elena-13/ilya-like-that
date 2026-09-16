@@ -1,7 +1,7 @@
 import { BOOKINGS_KEY } from '@/features/wishlist/constants';
 import { getById } from '@/lib/wishlist-db';
 import type { WishlistItem } from '@/features/wishlist/types';
-// import { kv } from '@vercel/kv'; // Можно закомментировать, чтобы не было лишних импортов
+// import { kv } from '@vercel/kv'; // Kept commented out to avoid an unused import
 
 export async function getItemById(id: string): Promise<WishlistItem | null> {
   const base = await getById(id);
