@@ -1,100 +1,48 @@
 'use client';
 
-import { useState, memo } from 'react';
-import { useRouter } from 'next/navigation';
-import { signIn, useSession } from 'next-auth/react';
+import { memo } from 'react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ExternalLink } from 'lucide-react';
 
-// import { WishlistItem } from '../types';
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Gift, X } from 'lucide-react';
-import Link from 'next/link';
-import { paths } from '@/lib/paths';
 import { BookButton } from './BookButton';
+import { UnbookButton } from './UnbookButton';
 
 type WishlistItemCardProps = {
   item: WishlistItem;
 };
 
 const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
-  const router = useRouter();
+  const currentUserEmail = session?.user?.email;
+  const isBookedByCurrentUser =
+    item.status === 'booked' && Boolean(currentUserEmail) && item.bookedBy === currentUserEmail;
 
-  const [isBooking, setIsBooking] = useState(false);
-  const [isUnbooking, setIsUnbooking] = useState(false);
+  const bookButton = (
+    <BookButton
+      id={String(item.id)}
+      version={item.version || 1}
+      status={item.status}
+      bookedBy={item.bookedBy}
+    />
+  );
 
-  const currentUserId = session?.user?.id;
-  // const isBookedByCurrentUser = item.isBooked && item.bookedById === currentUserId;
-
-  // const itemUrl = paths.item(item.slug, item.id);
-
-  const handleBook = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    setIsBooking(true);
-    try {
-      const response = await fetch('/api/book', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item.id }),
-      });
-
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || 'Failed to book the item.');
-      }
-
-      // This is the "magic" of Next.js: updating server-side data without reloading the page!
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsBooking(false);
-    }
-  };
-
-  const handleBookingClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!session) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      signIn('google', { callbackUrl: window.location.href });
-      return;
-    }
-
-    handleBook(e);
-  };
-
-  const handleUnbook = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation(); // Prevent other click handlers from firing
-
-    setIsUnbooking(true);
-    try {
-      const response = await fetch('/api/unbook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item.id }),
-      });
-
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || 'Failed to cancel the booking.');
-      }
-
-      // Refresh the page to show the changes
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsUnbooking(false);
-    }
-  };
+  const shopLinkButton = item.shopLink && (
+    <Button asChild variant="secondary" className="cursor-pointer" size="sm">
+      <a
+        href={item.shopLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open external link"
+      >
+        <ExternalLink className="h-4 w-4" />
+      </a>
+    </Button>
+  );
 
   return (
     <article
@@ -122,94 +70,37 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       {item.status === 'available' && (
         <>
           {/* Mobile */}
-          <div className="md:hidden absolute top-3 right-3 z-10 flex gap-2">
-            {item.shopLink && (
-              <Button asChild variant="secondary" className="cursor-pointer" size="sm">
-                <a
-                  href={item.shopLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open external link"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </Button>
-            )}
-            <Button
-              onClick={handleBookingClick}
-              disabled={isBooking || status === 'loading'}
-              variant="secondary"
-              className="cursor-pointer"
-              size="sm"
-            >
-              <Gift className="h-4 w-4" />
-              Book
-            </Button>
+          <div className="md:hidden absolute top-3 right-3 z-10 flex items-start gap-2">
+            {shopLinkButton}
+            <div>{bookButton}</div>
           </div>
 
           {/* Desktop */}
           <div className="hidden md:block pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
             <div className="absolute inset-0 bg-black/40" />
 
-            {item.shopLink && (
-              <div className="absolute top-3 left-3 pointer-events-auto">
-                <Button asChild variant="secondary" className="cursor-pointer" size="sm">
-                  <a
-                    href={item.shopLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Open external link"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
-              </div>
+            {shopLinkButton && (
+              <div className="absolute top-3 left-3 pointer-events-auto">{shopLinkButton}</div>
             )}
 
-            <div className="absolute top-3 right-3 pointer-events-auto">
-              {/* <Button
-                onClick={handleBookingClick}
-                disabled={isBooking || status === 'loading'}
-                variant="secondary"
-                className="cursor-pointer"
-                size="sm"
-              >
-                <Gift className="h-4 w-4" />
-                Book
-              </Button> */}
-              <BookButton id={String(item.id)} version={item.version || 1} status={item.status} />
-            </div>
+            <div className="absolute top-3 right-3 pointer-events-auto">{bookButton}</div>
           </div>
         </>
       )}
 
       {item.status === 'booked' && (
-        <div
-          className="
-                    absolute inset-0 grid place-items-center
-                    rounded-4xl
-                  "
-          aria-label="Reserved"
-        >
+        <div className="absolute inset-0 grid place-items-center rounded-4xl" aria-label="Reserved">
           <div className="absolute inset-0 bg-yellow/70" />
           <div className="absolute top-3 left-3">
             <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-2 px-3 font-secondary text-xs">
-              reserved
-              {/* {isBookedByCurrentUser ? ' You reserved' : 'Reserved'} */}
+              {isBookedByCurrentUser ? 'reserved by you' : 'reserved'}
             </span>
           </div>
-          {/* {isBookedByCurrentUser && (
+          {isBookedByCurrentUser && (
             <div className="absolute top-3 right-3 pointer-events-auto">
-              <Button
-                onClick={handleUnbook}
-                disabled={isUnbooking}
-                size="sm"
-                className="bg-navy text-white rounded-full  font-secondary text-xs cursor-pointer"
-              >
-                <X />
-              </Button>
+              <UnbookButton id={String(item.id)} />
             </div>
-          )} */}
+          )}
         </div>
       )}
     </article>

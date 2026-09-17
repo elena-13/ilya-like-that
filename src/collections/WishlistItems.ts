@@ -44,5 +44,15 @@ export const WishlistItems: CollectionConfig = {
       type: 'text',
       label: 'Shop link (where to buy)',
     },
+    {
+      name: 'bookedBy',
+      type: 'text',
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+        condition: (data) => data.status === 'booked',
+      },
+      label: 'Guest email (Google)',
+    },
   ],
 };

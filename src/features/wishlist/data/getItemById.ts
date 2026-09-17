@@ -1,22 +1,12 @@
-import { BOOKINGS_KEY } from '@/features/wishlist/constants';
-import { getById } from '@/lib/wishlist-db';
-import type { WishlistItem } from '@/features/wishlist/types';
-// import { kv } from '@vercel/kv'; // Kept commented out to avoid an unused import
+import { cache } from 'react';
+import { getPayload } from 'payload';
+import config from '@payload-config';
 
-export async function getItemById(id: string): Promise<WishlistItem | null> {
-  const base = await getById(id);
-  if (!base) {
-    return null;
-  }
+import type { WishlistItem } from '@/payload-types';
 
-  // const raw = await kv.hget<string>(BOOKINGS_KEY, id);
-  // const bookedById = raw != null ? String(raw) : null;
+// Cached per request so generateMetadata and the page share a single query.
+export const getItemById = cache(async (id: string): Promise<WishlistItem | null> => {
+  const payload = await getPayload({ config });
 
-  const bookedById = null;
-
-  return {
-    ...base,
-    isBooked: !!bookedById,
-    bookedById,
-  };
-}
+  return payload.findByID({ collection: 'wishlist-items', id, disableErrors: true });
+});

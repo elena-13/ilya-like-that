@@ -15,5 +15,5 @@ The goal of this project was to create a simple website with a personal wishlist
 - Framework: Next.js
 - UI Library: React
 - Authentication: NextAuth.js
-- Database: Vercel KV - A serverless Redis database used to store the wishlist items and their booking status
+- CMS & Database: Payload CMS with Postgres - stores gifts and their booking status
 - Styling: Tailwind CSS, Radix UI, Lucide React

@@ -5,13 +5,8 @@ import config from '@payload-config';
 import WishlistList from '@/features/wishlist/components/WishlistList';
 import { StarsField } from '@/features/wishlist/components/StarsField';
 import { AuthSlot } from '@/features/auth/AuthSlot';
-import { wishlistItems } from '@/data/collections/wishlist-items';
-// import { getEnrichedWishlistItems } from '@/features/wishlist/data/getEnrichedWishlistItems';
 
 export default async function Home() {
-  // const items = await getEnrichedWishlistItems();
-  // const items = wishlistItems;
-
   const payload = await getPayload({ config });
 
   const { docs: items } = await payload.find({
