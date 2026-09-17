@@ -152,6 +152,7 @@ export interface WishlistItem {
   status?: ('available' | 'booked') | null;
   version?: number | null;
   shopLink?: string | null;
+  bookedBy?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -260,6 +261,7 @@ export interface WishlistItemsSelect<T extends boolean = true> {
   status?: T;
   version?: T;
   shopLink?: T;
+  bookedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }

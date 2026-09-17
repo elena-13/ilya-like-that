@@ -1,84 +1,58 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { Gift, X, CheckCircle2, Lock } from 'lucide-react';
 
+import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
+import { bookGift } from '../actions/bookGift';
+import { unbookGift } from '../actions/unbookGift';
 
 type ItemReservationProps = {
-  itemId: string;
-  isBooked: boolean;
-  /** User id of the person who booked the item, or null when available. */
-  bookedById: string | null;
+  id: string;
+  version: number;
+  status: WishlistItem['status'];
+  bookedBy?: WishlistItem['bookedBy'];
 };
 
 /**
  * Status block + Book / Unbook controls for a single item.
- * Booking state lives in Redis, so we POST to the API and then
- * router.refresh() to pull the fresh server-rendered state.
+ * Both server actions revalidate the page, so the fresh server-rendered state
+ * replaces this component's props after a successful change.
  */
-export default function ItemReservation({ itemId, isBooked, bookedById }: ItemReservationProps) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+export default function ItemReservation({ id, version, status, bookedBy }: ItemReservationProps) {
+  const { data: session, status: sessionStatus } = useSession();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
-  const [isBooking, setIsBooking] = useState(false);
-  const [isUnbooking, setIsUnbooking] = useState(false);
+  const currentUserEmail = session?.user?.email;
+  const isBooked = status === 'booked';
+  const isBookedByCurrentUser = isBooked && Boolean(currentUserEmail) && bookedBy === currentUserEmail;
 
-  const currentUserId = session?.user?.id;
-  const isBookedByCurrentUser = isBooked && bookedById === currentUserId;
+  const runAction = (action: () => ReturnType<typeof bookGift>) => {
+    setError(null);
 
-  const handleBook = async () => {
-    if (!session) {
+    startTransition(async () => {
+      const result = await action();
+
+      if (!result.success) {
+        setError(result.error);
+      }
+    });
+  };
+
+  const handleBook = () => {
+    // Guests have to sign in before booking; send them to Google and bring them back here.
+    if (!currentUserEmail) {
       signIn('google', { callbackUrl: window.location.href });
       return;
     }
 
-    setIsBooking(true);
-    try {
-      const response = await fetch('/api/book', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId }),
-      });
-
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || 'Failed to book the item.');
-      }
-
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsBooking(false);
-    }
+    runAction(() => bookGift(id, version));
   };
 
-  const handleUnbook = async () => {
-    setIsUnbooking(true);
-    try {
-      const response = await fetch('/api/unbook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId }),
-      });
-
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || 'Failed to cancel the booking.');
-      }
-
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsUnbooking(false);
-    }
-  };
+  const handleUnbook = () => runAction(() => unbookGift(id));
 
   return (
     <div className="space-y-4">
@@ -117,26 +91,32 @@ export default function ItemReservation({ itemId, isBooked, bookedById }: ItemRe
       {!isBooked && (
         <Button
           onClick={handleBook}
-          disabled={isBooking || status === 'loading'}
+          disabled={isPending || sessionStatus === 'loading'}
           size="lg"
           className="w-full cursor-pointer sm:w-auto"
         >
           <Gift className="h-4 w-4" />
-          {isBooking ? 'Booking…' : 'Book'}
+          {isPending ? 'Booking…' : 'Book'}
         </Button>
       )}
 
       {isBookedByCurrentUser && (
         <Button
           onClick={handleUnbook}
-          disabled={isUnbooking}
+          disabled={isPending}
           variant="outline"
           size="lg"
           className="w-full cursor-pointer sm:w-auto"
         >
           <X className="h-4 w-4" />
-          {isUnbooking ? 'Cancelling…' : 'Unbook'}
+          {isPending ? 'Cancelling…' : 'Unbook'}
         </Button>
+      )}
+
+      {error && (
+        <p role="alert" className="text-sm text-red-500">
+          {error}
+        </p>
       )}
     </div>
   );

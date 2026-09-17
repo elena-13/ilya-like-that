@@ -1,14 +1,12 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 
-import wishlistData from '@/features/wishlist/data/wishlist.json';
 import { getItemById } from '@/features/wishlist/data/getItemById';
 import ItemReservation from '@/features/wishlist/components/ItemReservation';
 import PageHeader from '@/widgets/PageHeader/PageHeader';
 import { Button } from '@/components/ui/button';
-import { paths } from '@/lib/paths';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -16,21 +14,11 @@ type Props = {
 
 /**
  * Helper function to keep our component code clean and DRY.
- * Safely extracts the ID from a hybrid slug (e.g., "dyson-v15-p123").
+ * Safely extracts the numeric Payload ID from a hybrid slug (e.g., "dyson-v15-p123").
  */
 function extractIdFromSlug(fullSlug: string): string | null {
-  const separatorIndex = fullSlug.lastIndexOf('-p');
-  if (separatorIndex === -1) return null;
-
-  return fullSlug.substring(separatorIndex + 2);
-}
-
-// FIX: generateStaticParams must return the exact param key ('slug')
-// formatted exactly as it will appear in the URL.
-export function generateStaticParams() {
-  return wishlistData.map((item) => ({
-    slug: `${item.slug}-p${item.id}`,
-  }));
+  const match = fullSlug.match(/-p(\d+)$/);
+  return match ? match[1] : null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -44,11 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!item) return { title: 'Gift not found' };
 
   return {
-    title: `${item.name} | My Wishlist`,
-    description: `Gift ${item.name} by ${item.brand}`,
-    openGraph: {
-      images: [item.image],
-    },
+    title: `${item.title} | My Wishlist`,
+    description: `Gift ${item.title}`,
   };
 }
 
@@ -61,12 +46,6 @@ export default async function ItemPage({ params }: Props) {
   const item = await getItemById(id);
   if (!item) notFound();
 
-  // SEO & UX protection: if the slug is outdated, gracefully redirect
-  const correctSlug = `${item.slug}-p${item.id}`;
-  if (slug !== correctSlug) {
-    redirect(paths.item(item.slug, item.id));
-  }
-
   return (
     <>
       <PageHeader />
@@ -74,8 +53,8 @@ export default async function ItemPage({ params }: Props) {
         {/* Item image */}
         <div className="overflow-hidden rounded-4xl bg-white ring-1 ring-black/5 shadow-sm">
           <Image
-            src={item.image}
-            alt={item.name}
+            src="/images/image-22.webp"
+            alt={item.title}
             width={800}
             height={1200}
             sizes="(min-width:768px) 50vw, 100vw"
@@ -86,21 +65,23 @@ export default async function ItemPage({ params }: Props) {
 
         {/* Details + reservation */}
         <div className="flex flex-col gap-5">
-          <div>
-            <p className="font-secondary text-sm text-navy/60">{item.brand}</p>
-            <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.name}</h1>
-          </div>
+          <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.title}</h1>
 
-          {item.link && (
+          {item.shopLink && (
             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <a href={item.link} target="_blank" rel="noopener noreferrer">
+              <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4" />
                 View product
               </a>
             </Button>
           )}
 
-          <ItemReservation itemId={item.id} isBooked={item.isBooked} bookedById={item.bookedById} />
+          <ItemReservation
+            id={String(item.id)}
+            version={item.version || 1}
+            status={item.status}
+            bookedBy={item.bookedBy}
+          />
         </div>
       </main>
     </>
