@@ -1,9 +1,11 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 
 import { getItemById } from '@/features/wishlist/data/getItemById';
+import { getItemImage } from '@/features/wishlist/utils/getItemImage';
+import { getItemUrl } from '@/features/wishlist/utils/getItemUrl';
 import ItemReservation from '@/features/wishlist/components/ItemReservation';
 import PageHeader from '@/widgets/PageHeader/PageHeader';
 import { Button } from '@/components/ui/button';
@@ -33,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${item.title} | My Wishlist`,
-    description: `Gift ${item.title}`,
+    description: item.brand ? `Gift ${item.title} by ${item.brand}` : `Gift ${item.title}`,
   };
 }
 
@@ -46,6 +48,14 @@ export default async function ItemPage({ params }: Props) {
   const item = await getItemById(id);
   if (!item) notFound();
 
+  // The slug is derived from the title, so after a rename old links redirect to the current URL.
+  const itemUrl = getItemUrl(item);
+  if (`/item/${slug}` !== itemUrl) {
+    redirect(itemUrl);
+  }
+
+  const image = getItemImage(item);
+
   return (
     <>
       <PageHeader />
@@ -53,10 +63,10 @@ export default async function ItemPage({ params }: Props) {
         {/* Item image */}
         <div className="overflow-hidden rounded-4xl bg-white ring-1 ring-black/5 shadow-sm">
           <Image
-            src="/images/image-22.webp"
-            alt={item.title}
-            width={800}
-            height={1200}
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
             sizes="(min-width:768px) 50vw, 100vw"
             className="h-auto w-full object-cover"
             priority
@@ -65,7 +75,10 @@ export default async function ItemPage({ params }: Props) {
 
         {/* Details + reservation */}
         <div className="flex flex-col gap-5">
-          <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.title}</h1>
+          <div>
+            {item.brand && <p className="font-secondary text-sm text-navy/60">{item.brand}</p>}
+            <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.title}</h1>
+          </div>
 
           {item.shopLink && (
             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">

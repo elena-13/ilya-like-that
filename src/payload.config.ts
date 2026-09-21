@@ -3,6 +3,7 @@ import path from 'path';
 import { buildConfig } from 'payload';
 import { fileURLToPath } from 'url';
 
+import { Media } from './collections/Media';
 import { Users } from './collections/Users';
 import { WishlistItems } from './collections/WishlistItems';
 
@@ -16,7 +17,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, WishlistItems],
+  collections: [Users, Media, WishlistItems],
   // Only the admin panel and the REST API are used.
   graphQL: {
     disable: true,

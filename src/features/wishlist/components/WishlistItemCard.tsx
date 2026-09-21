@@ -10,6 +10,8 @@ import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { BookButton } from './BookButton';
 import { UnbookButton } from './UnbookButton';
+import { getItemImage } from '../utils/getItemImage';
+import { getItemUrl } from '../utils/getItemUrl';
 
 type WishlistItemCardProps = {
   item: WishlistItem;
@@ -17,6 +19,8 @@ type WishlistItemCardProps = {
 
 const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const { data: session } = useSession();
+  const image = getItemImage(item);
+  const itemUrl = getItemUrl(item);
 
   const currentUserEmail = session?.user?.email;
   const isBookedByCurrentUser =
@@ -52,19 +56,24 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       "
       aria-label={item.title}
     >
-      <Link href="/" className="block w-full h-full focus:outline-none">
+      <Link href={itemUrl} className="block w-full h-full focus:outline-none">
         <Image
-          src="/images/image-22.webp"
-          alt={item.title}
-          width={800}
-          height={1200}
+          src={image.src}
+          alt={image.alt}
+          width={image.width}
+          height={image.height}
           sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
           className="w-full h-auto object-cover"
         />
       </Link>
 
       <div className="px-5 py-3">
-        <h3 className="text-navy font-bold leading-snug line-clamp-2">{item.title}</h3>
+        {item.brand && <p className="font-secondary text-xs text-navy/60">{item.brand}</p>}
+        <h3 className="text-navy font-bold leading-snug line-clamp-2">
+          <Link href={itemUrl} className="hover:underline focus:outline-none">
+            {item.title}
+          </Link>
+        </h3>
       </div>
 
       {item.status === 'available' && (
@@ -88,8 +97,12 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         </>
       )}
 
+      {/* Clicks pass through the overlay, so reserved gifts can still be opened. */}
       {item.status === 'booked' && (
-        <div className="absolute inset-0 grid place-items-center rounded-4xl" aria-label="Reserved">
+        <div
+          className="pointer-events-none absolute inset-0 grid place-items-center rounded-4xl"
+          aria-label="Reserved"
+        >
           <div className="absolute inset-0 bg-yellow/70" />
           <div className="absolute top-3 left-3">
             <span className="inline-flex items-center gap-2 rounded-full bg-navy text-white py-2 px-3 font-secondary text-xs">
