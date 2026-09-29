@@ -1,4 +1,10 @@
-version: '3.8'
+# docker-compose.yml — LOCAL DEVELOPMENT (Mac)
+#
+# Only runs Postgres. Next.js runs on the host via `npm run dev`,
+# using DATABASE_URI=...@localhost:5432/... from .env (see .env.example).
+#
+#   docker compose up -d
+#   npm run dev
 
 services:
   db:
@@ -9,20 +15,10 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - '5432:5432'
+      # Exposed for npm run dev and DB tools (TablePlus, psql, ...); bound to localhost only
+      - '127.0.0.1:5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
-
-  web:
-    build: .
-    restart: unless-stopped
-    ports:
-      - '3000:3000'
-    depends_on:
-      - db
-    environment:
-      DATABASE_URI: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
 
 volumes:
   pgdata:

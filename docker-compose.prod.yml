@@ -1,5 +1,16 @@
-# docker-compose.prod.yml
-version: '3.8'
+# docker-compose.prod.yml — PRODUCTION (Hetzner server)
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# The database has no published ports, so it is reachable only from inside the Docker network.
+# All app variables come from .env (see .env.example).
+# DATABASE_URI is overridden so containers always reach Postgres via the "db" service,
+# even if .env points to localhost.
+
+x-app-env: &app-env
+  env_file: .env
+  environment:
+    DATABASE_URI: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
 
 services:
   db:
@@ -12,20 +23,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  migrator:
+    <<: *app-env
+    image: node:20
+    volumes:
+      - ./:/app
+    working_dir: /app
+    depends_on:
+      - db
+
   web:
+    <<: *app-env
     build: .
     restart: unless-stopped
     ports:
       - '3005:3000'
     depends_on:
       - db
-    environment:
-      DATABASE_URI: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
-      NEXTAUTH_URL: ${NEXTAUTH_URL}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    volumes:
+      - ./media:/app/media
+      - ./media:/app/public/media
 
 volumes:
   pgdata:
