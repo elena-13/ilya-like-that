@@ -9,7 +9,7 @@ export const WishlistItems: CollectionConfig = {
   admin: {
     // Show gifts by their title in the admin panel.
     useAsTitle: 'title',
-    defaultColumns: ['title', 'status', 'shopLink'],
+    defaultColumns: ['title', 'brand', 'image', 'status', 'shopLink'],
   },
   fields: [
     {
@@ -17,6 +17,17 @@ export const WishlistItems: CollectionConfig = {
       type: 'text',
       required: true,
       label: 'Gift title',
+    },
+    {
+      name: 'brand',
+      type: 'text',
+      label: 'Brand',
+    },
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Image',
     },
     {
       name: 'status',
