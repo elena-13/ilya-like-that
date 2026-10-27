@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import type { Session } from 'next-auth';
-import { LogOut, Settings } from 'lucide-react';
+import { Gift, LogOut, Settings } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -50,6 +50,12 @@ export default function UserMenu({ user }: UserMenuProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href={paths.myGifts()}>
+            <Gift className="h-4 w-4" />
+            My gifts
+          </Link>
+        </DropdownMenuItem>
         {user.isAdmin && (
           <DropdownMenuItem asChild className="cursor-pointer">
             <Link href={paths.admin()}>

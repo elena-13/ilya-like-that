@@ -5,6 +5,7 @@ import config from '@payload-config';
 import { revalidatePath } from 'next/cache';
 
 import { getCurrentUser } from '@/lib/auth-utils';
+import { paths } from '@/lib/paths';
 
 type UnbookGiftResult = { success: true } | { success: false; error: string };
 
@@ -43,6 +44,7 @@ export async function unbookGift(id: string): Promise<UnbookGiftResult> {
 
     revalidatePath('/');
     revalidatePath('/item/[slug]', 'page');
+    revalidatePath(paths.myGifts());
     return { success: true };
   } catch (error) {
     console.error('Failed to unbook gift:', error);

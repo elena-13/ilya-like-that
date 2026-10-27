@@ -5,6 +5,7 @@ import config from '@payload-config';
 import { revalidatePath } from 'next/cache';
 
 import { getCurrentUser } from '@/lib/auth-utils';
+import { paths } from '@/lib/paths';
 
 type BookGiftResult = { success: true } | { success: false; error: string };
 
@@ -44,6 +45,7 @@ export async function bookGift(id: string, currentVersion: number): Promise<Book
     // Invalidate the Next.js cache for the home and item pages so every visitor sees the update.
     revalidatePath('/');
     revalidatePath('/item/[slug]', 'page');
+    revalidatePath(paths.myGifts());
     return { success: true };
   } catch (error) {
     console.error('Failed to book gift:', error);
