@@ -1,11 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import type { ApplicationOptions } from 'pixi.js';
 
-import { usePixiApp } from '@/lib/pixi/usePixiApp';
+import { usePixiScene } from '@/lib/pixi/usePixiScene';
+import { createStarShower } from '../pixi/createStarShower';
 
-// Retina screens report 3x; capping at 2 looks the same and saves battery.
 const MAX_RESOLUTION = 2;
 
 const getPixiOptions = (): Partial<ApplicationOptions> => ({
@@ -14,12 +14,22 @@ const getPixiOptions = (): Partial<ApplicationOptions> => ({
   antialias: true,
   autoDensity: true,
   resolution: Math.min(window.devicePixelRatio, MAX_RESOLUTION),
+  autoStart: false,
 });
 
-export function StarShower() {
-  const hostRef = useRef<HTMLDivElement>(null);
+type StarShowerProps = {
+  playCount: number;
+};
 
-  usePixiApp(hostRef, getPixiOptions);
+export function StarShower({ playCount }: StarShowerProps) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const shower = usePixiScene(hostRef, getPixiOptions, createStarShower);
+
+  useEffect(() => {
+    if (shower && playCount > 0) {
+      shower.play();
+    }
+  }, [shower, playCount]);
 
   return <div ref={hostRef} aria-hidden className="pointer-events-none fixed inset-0 z-100" />;
 }
