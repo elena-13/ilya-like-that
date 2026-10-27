@@ -28,6 +28,18 @@ cp .env.example .env
 
 Then replace the placeholder values with real ones. The real `.env` is git-ignored and must never be committed. When you add a new environment variable, add it to `.env.example` as well.
 
+### Local overrides
+
+`.env` holds the production values used on deploy. To use different values locally, put them in `.env.development.local`. `npm run dev` loads it on top of `.env`, but production builds (`next build` / Docker) ignore it. It is git-ignored too. Payload's CLI (`npm run migrate`) reads it as well.
+
+```bash
+# .env.development.local
+# So Google login returns to your machine instead of production
+NEXTAUTH_URL=http://localhost:3000
+# Local Postgres from docker-compose.yml (production builds its own from DB_* values)
+DATABASE_URI=postgres://<DB_USER>:<DB_PASSWORD>@localhost:5432/<DB_NAME>
+```
+
 ## Running the Project
 
 ### Local development (Mac)
@@ -39,7 +51,7 @@ docker compose up -d
 npm run dev
 ```
 
-In `.env`, `DATABASE_URI` should point to `localhost:5432`.
+In `.env.development.local`, `DATABASE_URI` should point to `localhost:5432` (see [Local overrides](#local-overrides)).
 
 ### Production (Hetzner server)
 
