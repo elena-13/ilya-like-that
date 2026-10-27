@@ -7,6 +7,7 @@ import { Gift } from 'lucide-react';
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { bookGift } from '../actions/bookGift';
+import { announceGiftBooked } from '../utils/giftBookedEvent';
 
 type BookButtonProps = {
   id: string;
@@ -46,11 +47,13 @@ export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
       // The server action uses the version for an optimistic concurrency check.
       const result = await bookGift(id, version);
 
-      // On success the action revalidates the page, so the fresh data
-      // re-renders this item as booked; only failures need handling here.
       if (!result.success) {
         setError(result.error);
+        return;
       }
+
+      // The action revalidates the page, which re-renders this item as booked.
+      announceGiftBooked();
     });
   };
 

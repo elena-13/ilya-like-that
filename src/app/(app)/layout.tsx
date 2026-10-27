@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import AuthClientProvider from '@/components/auth/AuthClientProvider';
+import { StarShowerHost } from '@/features/wishlist/components/StarShowerHost';
 import Header from '@/widgets/Header/Header';
 
 import './globals.css';
@@ -23,6 +24,7 @@ export default function RootLayout({
           {/* <Header /> */}
           {children}
         </AuthClientProvider>
+        <StarShowerHost />
       </body>
     </html>
   );

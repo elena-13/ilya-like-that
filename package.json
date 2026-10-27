@@ -24,6 +24,7 @@
     "next": "15.4.11",
     "next-auth": "^4.24.11",
     "payload": "^3.89.0",
+    "pixi.js": "^8.22.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-merge": "^3.3.1",
