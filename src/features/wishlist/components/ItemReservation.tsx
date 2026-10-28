@@ -8,6 +8,7 @@ import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { bookGift } from '../actions/bookGift';
 import { unbookGift } from '../actions/unbookGift';
+import { announceGiftBooked } from '../utils/giftBookedEvent';
 
 type ItemReservationProps = {
   id: string;
@@ -30,7 +31,7 @@ export default function ItemReservation({ id, version, status, bookedBy }: ItemR
   const isBooked = status === 'booked';
   const isBookedByCurrentUser = isBooked && Boolean(currentUserEmail) && bookedBy === currentUserEmail;
 
-  const runAction = (action: () => ReturnType<typeof bookGift>) => {
+  const runAction = (action: () => ReturnType<typeof bookGift>, onSuccess?: () => void) => {
     setError(null);
 
     startTransition(async () => {
@@ -38,7 +39,10 @@ export default function ItemReservation({ id, version, status, bookedBy }: ItemR
 
       if (!result.success) {
         setError(result.error);
+        return;
       }
+
+      onSuccess?.();
     });
   };
 
@@ -49,7 +53,7 @@ export default function ItemReservation({ id, version, status, bookedBy }: ItemR
       return;
     }
 
-    runAction(() => bookGift(id, version));
+    runAction(() => bookGift(id, version), announceGiftBooked);
   };
 
   const handleUnbook = () => runAction(() => unbookGift(id));
