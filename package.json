@@ -12,6 +12,7 @@
     "test:e2e:ui": "playwright test --ui",
     "migrate:create": "payload migrate:create",
     "migrate": "payload migrate",
+    "predeploy": "npm run lint && tsc --noEmit && npm run test:e2e",
     "seed:e2e": "NODE_ENV=test payload run scripts/seed-e2e.ts"
   },
   "dependencies": {
