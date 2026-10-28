@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "migrate:create": "payload migrate:create",
-    "migrate": "payload migrate"
+    "migrate": "payload migrate",
+    "seed:e2e": "NODE_ENV=test payload run scripts/seed-e2e.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.89.0",
