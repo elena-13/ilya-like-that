@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "migrate:create": "payload migrate:create",
     "migrate": "payload migrate",
     "seed:e2e": "NODE_ENV=test payload run scripts/seed-e2e.ts"
