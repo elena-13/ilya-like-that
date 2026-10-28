@@ -25,9 +25,12 @@ test.describe.serial('booking a gift', () => {
     await openGift(page);
 
     await expect(page.getByText('Available', { exact: true })).toBeVisible();
+    const canvasesBefore = await page.locator('canvas').count();
     await page.getByRole('button', { name: 'Book', exact: true }).click();
 
     await expect(page.getByText('Reserved', { exact: true })).toBeVisible();
+    // Booking plays the star shower, which adds a Pixi canvas.
+    await expect(page.locator('canvas')).toHaveCount(canvasesBefore + 1);
     await expect(page.getByText('You reserved this gift.')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Unbook' })).toBeVisible();
   });
