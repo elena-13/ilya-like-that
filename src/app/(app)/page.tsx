@@ -1,20 +1,15 @@
 export const dynamic = 'force-dynamic';
 import Image from 'next/image';
-import { getPayload } from 'payload';
-import config from '@payload-config';
 
 import WishlistList from '@/features/wishlist/components/WishlistList';
 import { StarsField } from '@/features/wishlist/components/StarsField';
 import { AuthSlot } from '@/features/auth/AuthSlot';
+import { getWishlistItems } from '@/features/wishlist/data/getWishlistItems';
+import { getCurrentUser } from '@/lib/auth-utils';
 
 export default async function Home() {
-  const payload = await getPayload({ config });
-
-  const { docs: items } = await payload.find({
-    collection: 'wishlist-items',
-    limit: 100,
-    sort: '-createdAt',
-  });
+  const user = await getCurrentUser();
+  const items = await getWishlistItems(user?.isAdmin);
 
   return (
     <main className="min-h-screen">

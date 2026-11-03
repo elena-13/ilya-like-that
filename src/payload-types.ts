@@ -167,6 +167,10 @@ export interface Media {
  */
 export interface WishlistItem {
   id: number;
+  /**
+   * Hidden from guests: a note for yourself, not shown on the public wishlist.
+   */
+  isPrivate?: boolean | null;
   title: string;
   brand?: string | null;
   image?: (number | null) | Media;
@@ -298,6 +302,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "wishlist-items_select".
  */
 export interface WishlistItemsSelect<T extends boolean = true> {
+  isPrivate?: T;
   title?: T;
   brand?: T;
   image?: T;

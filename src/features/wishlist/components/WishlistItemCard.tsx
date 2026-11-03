@@ -10,6 +10,7 @@ import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { BookButton } from './BookButton';
 import { UnbookButton } from './UnbookButton';
+import { PrivateBadge } from './PrivateBadge';
 import { getItemImage } from '../utils/getItemImage';
 import { getItemUrl } from '../utils/getItemUrl';
 
@@ -68,6 +69,8 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       </Link>
 
       <div className="px-5 py-3">
+        {/* Only admins receive private items, so this is never shown to guests. */}
+        {item.isPrivate && <PrivateBadge className="mb-2" />}
         {item.brand && <p className="font-secondary text-xs text-navy/60">{item.brand}</p>}
         <h3 className="text-navy font-bold leading-snug line-clamp-2">
           <Link href={itemUrl} className="hover:underline focus:outline-none">
