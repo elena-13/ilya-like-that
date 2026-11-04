@@ -9,9 +9,19 @@ export const WishlistItems: CollectionConfig = {
   admin: {
     // Show gifts by their title in the admin panel.
     useAsTitle: 'title',
-    defaultColumns: ['title', 'brand', 'image', 'status', 'shopLink'],
+    defaultColumns: ['title', 'brand', 'image', 'status', 'isPrivate', 'shopLink'],
   },
   fields: [
+    {
+      name: 'isPrivate',
+      type: 'checkbox',
+      label: 'Private (only admins see it)',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Hidden from guests: a note for yourself, not shown on the public wishlist.',
+      },
+    },
     {
       name: 'title',
       type: 'text',

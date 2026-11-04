@@ -3,6 +3,7 @@ import config from '@payload-config';
 
 // Fixed data the e2e tests rely on. Tests look the gift up by this title.
 export const E2E_GIFT_TITLE = 'E2E Test Gift';
+export const E2E_PRIVATE_GIFT_TITLE = 'E2E Private Gift';
 
 const payload = await getPayload({ config });
 
@@ -28,7 +29,18 @@ await payload.create({
   },
 });
 
-console.log(`Seeded "${E2E_GIFT_TITLE}"`);
+// Admin-only item: guests must never see it.
+await payload.create({
+  collection: 'wishlist-items',
+  data: {
+    title: E2E_PRIVATE_GIFT_TITLE,
+    status: 'available',
+    version: 1,
+    isPrivate: true,
+  },
+});
+
+console.log(`Seeded "${E2E_GIFT_TITLE}" and "${E2E_PRIVATE_GIFT_TITLE}"`);
 
 // Payload keeps the DB pool open, so exit explicitly.
 process.exit(0);

@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 import { getCurrentUser } from '@/lib/auth-utils';
 import { paths } from '@/lib/paths';
+import { canViewItem } from '../data/visibility';
 
 type BookGiftResult = { success: true } | { success: false; error: string };
 
@@ -21,6 +22,11 @@ export async function bookGift(id: string, currentVersion: number): Promise<Book
   try {
     const payload = await getPayload({ config });
     const item = await payload.findByID({ collection: 'wishlist-items', id });
+
+    // Guests can't see private items, so they can't book them either.
+    if (!canViewItem(item, user.isAdmin)) {
+      return fail('This gift could not be found.');
+    }
 
     // Compare-and-swap check: bail out if someone changed the item since it was loaded.
     if ((item.version ?? 1) !== currentVersion) {

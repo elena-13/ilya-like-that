@@ -4,9 +4,12 @@ import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 
 import { getItemById } from '@/features/wishlist/data/getItemById';
+import { canViewItem } from '@/features/wishlist/data/visibility';
+import { getCurrentUser } from '@/lib/auth-utils';
 import { getItemImage } from '@/features/wishlist/utils/getItemImage';
 import { getItemUrl } from '@/features/wishlist/utils/getItemUrl';
 import ItemReservation from '@/features/wishlist/components/ItemReservation';
+import { PrivateBadge } from '@/features/wishlist/components/PrivateBadge';
 import PageHeader from '@/widgets/PageHeader/PageHeader';
 import { Button } from '@/components/ui/button';
 
@@ -30,8 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = extractIdFromSlug(slug);
   if (!id) return { title: 'Gift not found' };
 
-  const item = await getItemById(id);
-  if (!item) return { title: 'Gift not found' };
+  const [item, user] = await Promise.all([getItemById(id), getCurrentUser()]);
+  // Don't leak a private item's title to guests through the page metadata.
+  if (!item || !canViewItem(item, user?.isAdmin)) return { title: 'Gift not found' };
 
   return {
     title: `${item.title} | My Wishlist`,
@@ -45,8 +49,8 @@ export default async function ItemPage({ params }: Props) {
   const id = extractIdFromSlug(slug);
   if (!id) notFound();
 
-  const item = await getItemById(id);
-  if (!item) notFound();
+  const [item, user] = await Promise.all([getItemById(id), getCurrentUser()]);
+  if (!item || !canViewItem(item, user?.isAdmin)) notFound();
 
   // The slug is derived from the title, so after a rename old links redirect to the current URL.
   const itemUrl = getItemUrl(item);
@@ -76,6 +80,7 @@ export default async function ItemPage({ params }: Props) {
         {/* Details + reservation */}
         <div className="flex flex-col gap-5">
           <div>
+            {item.isPrivate && <PrivateBadge className="mb-3" />}
             {item.brand && <p className="font-secondary text-sm text-navy/60">{item.brand}</p>}
             <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.title}</h1>
           </div>
