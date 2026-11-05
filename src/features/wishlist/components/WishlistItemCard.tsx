@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { BookButton } from './BookButton';
 import { UnbookButton } from './UnbookButton';
 import { PrivateBadge } from './PrivateBadge';
-import { HandExternalLinkIcon } from './HandIcons';
+import { HandExternalLinkIcon, handInk } from './HandIcons';
 import { getItemImage } from '../utils/getItemImage';
 import { getItemUrl } from '../utils/getItemUrl';
 import { getCardLook } from '../utils/getCardLook';
@@ -41,14 +41,22 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   );
 
   const shopLinkButton = item.shopLink && (
-    <Button asChild variant="secondary" className="cursor-pointer" size="sm">
+    <Button
+      asChild
+      variant="ghost"
+      size="icon"
+      className={cn(
+        'relative size-10 cursor-pointer rounded-full bg-transparent hover:bg-background dark:hover:bg-background hover:text-[#b83c2b] hover:rotate-3',
+        handInk,
+      )}
+    >
       <a
         href={item.shopLink}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Open external link"
       >
-        <HandExternalLinkIcon className="size-5" />
+        <HandExternalLinkIcon className="size-6" />
       </a>
     </Button>
   );

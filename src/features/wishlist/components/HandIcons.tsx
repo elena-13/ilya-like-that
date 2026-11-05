@@ -5,6 +5,9 @@ import type { SVGProps } from 'react';
 
 type IconProps = SVGProps<SVGSVGElement>;
 
+// Red ink used for the hand-drawn card buttons.
+export const handInk = 'text-[#b83c2b]';
+
 function HandIcon({ children, ...props }: IconProps) {
   return (
     <svg
@@ -23,17 +26,19 @@ function HandIcon({ children, ...props }: IconProps) {
 }
 
 export function HandGiftIcon(props: IconProps) {
+  // Same drawing as public/icons/gift.svg
   return (
-    <HandIcon {...props}>
-      {/* lid */}
-      <path d="M3.2 9.1C7 8.7 15 8.9 20.9 8.6L21.1 12.2C15 12.5 8 12.3 3 12.4Z" />
-      {/* box */}
-      <path d="M4.3 12.5L4.6 20.8C9 21.1 15 20.7 19.6 20.9L19.9 12.3" />
-      {/* ribbon */}
-      <path d="M11.8 8.8L12.1 20.9" />
-      {/* bow */}
-      <path d="M11.9 8.6C9.5 4.5 6 4.8 6.6 6.7C7.2 8.3 10 8.6 11.9 8.6" />
-      <path d="M12 8.6C13.8 4.2 17.6 4.6 17.2 6.5C16.8 8.2 14 8.5 12 8.6" />
+    <HandIcon strokeWidth={1.3} {...props}>
+      {/* lid edge, a bit heavier */}
+      <path d="M4.7 8.4C9.2 8.1 14.8 8 19.2 7.9" strokeWidth={1.8} />
+      {/* box, slightly narrower at the bottom */}
+      <path d="M4.9 8.5C5.1 11.9 5.4 15.6 5.7 18.8C9.8 19 14 18.9 17.9 18.9C18.3 15.3 18.7 11.6 19 8" />
+      {/* ribbon, centred on x = 12 */}
+      <path d="M11 8.3L11.1 18.9" />
+      <path d="M13 8.2L12.9 18.9" />
+      {/* bow loops meeting at the centre */}
+      <path d="M12 7.4C10.6 4.9 7.5 3.3 6.3 4.5C5.3 5.6 7.4 7.4 12 7.4Z" strokeWidth={1.7} />
+      <path d="M12 7.4C13.4 4.7 16.7 3 17.8 4.3C18.8 5.6 16.5 7.3 12 7.4Z" strokeWidth={1.7} />
     </HandIcon>
   );
 }
@@ -48,11 +53,14 @@ export function HandCrossIcon(props: IconProps) {
 }
 
 export function HandExternalLinkIcon(props: IconProps) {
+  // Same drawing as public/icons/link.svg
   return (
-    <HandIcon {...props}>
-      <path d="M10.5 5.5C8 5.4 6 5.6 4.8 5.7L4.6 19.3C9 19.5 14 19.2 18.4 19.4L18.6 13.4" />
-      <path d="M10.8 13.1C13.5 10.4 16.3 7.6 19.2 4.9" />
-      <path d="M13.6 4.6C15.6 4.8 17.5 4.7 19.3 4.8L19.1 10.4" />
+    <HandIcon strokeWidth={2} {...props}>
+      {/* box, open at the top-right */}
+      <path d="M10.3 5.7C8.4 5.5 6.7 5.7 5.3 5.9C4.9 10 5.1 14.6 5.4 18.6C9.5 18.9 13.9 18.8 18.1 18.5C18.4 16.9 18.4 15.2 18.2 13.7" />
+      {/* arrow out of the box */}
+      <path d="M11.1 12.9C13.4 10.6 15.7 8.2 18.5 5.6" />
+      <path d="M13.8 5.2C15.5 5.1 17.1 5.2 18.7 5.4C18.9 7 18.8 8.5 18.6 10.1" />
     </HandIcon>
   );
 }
