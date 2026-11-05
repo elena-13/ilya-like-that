@@ -19,10 +19,10 @@ const TAPES = [
 // Tape size scales with the card (cqw = % of the card's width),
 // so smaller cards get smaller tape.
 const TAPE_SIZES = [
-  'w-[28cqw] h-[8cqw]',
-  'w-[34cqw] h-[9.5cqw]',
-  'w-[40cqw] h-[8.5cqw]',
-  'w-[24cqw] h-[10cqw]',
+  'w-[40cqw] h-[11cqw]',
+  'w-[48cqw] h-[13cqw]',
+  'w-[56cqw] h-[12cqw]',
+  'w-[36cqw] h-[14cqw]',
 ];
 
 // Torn, uneven ends so the tape doesn't look cut by a machine.
@@ -32,6 +32,9 @@ const TAPE_EDGES = [
   'polygon(0 0, 100% 3%, 97% 18%, 100% 36%, 96% 60%, 100% 82%, 97% 100%, 1% 97%, 4% 80%, 0 58%, 3% 35%, 0 14%)',
   'polygon(3% 4%, 97% 0, 100% 22%, 96% 41%, 100% 66%, 95% 100%, 2% 100%, 0 76%, 4% 50%, 0 26%)',
 ];
+
+// Two crease layouts for the tape surface.
+const TAPE_WRINKLES = ['', 'tape-wrinkles-alt'];
 
 export function hash(value: string | number) {
   const str = String(value);
@@ -54,5 +57,6 @@ export function getCardLook(id: string | number) {
     tape: TAPES[(h >>> 6) % TAPES.length],
     tapeSize: TAPE_SIZES[(h >>> 9) % TAPE_SIZES.length],
     tapeEdge: TAPE_EDGES[(h >>> 12) % TAPE_EDGES.length],
+    tapeWrinkles: TAPE_WRINKLES[(h >>> 15) % TAPE_WRINKLES.length],
   };
 }

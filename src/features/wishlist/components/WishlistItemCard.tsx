@@ -71,16 +71,22 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       )}
       aria-label={item.title}
     >
-      {/* tape */}
+      {/* tape: the outer span places it and casts the shadow, the inner one
+          is clipped to the torn shape (a clip would cut the shadow off) */}
       <span
         aria-hidden
         className={cn(
-          'pointer-events-none absolute -top-[4cqw] z-20 tape-gingham opacity-90',
+          'pointer-events-none absolute -top-[6cqw] z-20',
+          'drop-shadow-[0_1px_1.5px_rgb(0_0_0/0.22)]',
           look.tape,
           look.tapeSize,
         )}
-        style={{ clipPath: look.tapeEdge }}
-      />
+      >
+        <span
+          className={cn('tape-gingham tape-wrinkles block size-full', look.tapeWrinkles)}
+          style={{ clipPath: look.tapeEdge }}
+        />
+      </span>
 
       <Link
         href={itemUrl}
