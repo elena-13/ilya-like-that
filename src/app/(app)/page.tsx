@@ -1,8 +1,8 @@
 export const dynamic = 'force-dynamic';
-import Image from 'next/image';
 
 import WishlistList from '@/features/wishlist/components/WishlistList';
 import { StarsField } from '@/features/wishlist/components/StarsField';
+import { HeroClouds } from '@/widgets/HeroClouds/HeroClouds';
 import { AuthSlot } from '@/features/auth/AuthSlot';
 import { getWishlistItems } from '@/features/wishlist/data/getWishlistItems';
 import { getCurrentUser } from '@/lib/auth-utils';
@@ -33,39 +33,7 @@ export default async function Home() {
               A little wishlist for a little human.
             </p>
 
-            {/* right cloud */}
-            <div className="absolute max-w-none top-1/2 left-1/2 w-full pointer-events-none z-10">
-              <Image
-                src="/cloud-1.webp"
-                alt="Cloud"
-                width={3320}
-                height={2203}
-                className="
-                  w-full h-full object-contain
-                  transform-gpu will-change-[transform]
-                  animate-[cloud-float-1_14s_ease-in-out_infinite]
-                  [animation-delay:0.6s]
-                  motion-safe:animate-[cloud-float-1_14s_ease-in-out_infinite]
-                "
-              />
-            </div>
-
-            {/* left cloud */}
-            <div className="absolute max-w-none -top-1/15 right-1/2 w-[110%] pointer-events-none z-10">
-              <Image
-                src="/cloud-1.webp"
-                alt="Cloud"
-                width={3320}
-                height={2203}
-                className="
-                  w-full h-full object-contain transform scale-x-[-1]
-                  transform-gpu will-change-[transform]
-                  animate-[cloud-float-2_16s_ease-in-out_infinite]
-                  [animation-delay:1.4s]
-                  motion-safe:animate-[cloud-float-2_16s_ease-in-out_infinite]
-                "
-              />
-            </div>
+            <HeroClouds />
 
             {/* stars */}
             <StarsField />
