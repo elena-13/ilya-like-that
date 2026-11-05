@@ -82,3 +82,15 @@ export function HandExternalLinkIcon(props: IconProps) {
     </HandIcon>
   );
 }
+
+export function HandLoginIcon(props: IconProps) {
+  return (
+    <HandIcon strokeWidth={2} {...props}>
+      {/* door frame */}
+      <path d="M13.5 4.6C15.6 4.5 17.4 4.6 19 4.8C19.2 9.6 19.1 14.4 19 19.3C17.3 19.5 15.5 19.4 13.6 19.3" />
+      {/* arrow going in */}
+      <path d="M4.8 12.1C8 12 11.2 12.1 14.2 12" />
+      <path d="M10.6 8.4C11.9 9.6 13.1 10.8 14.3 12C13.1 13.2 11.9 14.4 10.6 15.6" />
+    </HandIcon>
+  );
+}
