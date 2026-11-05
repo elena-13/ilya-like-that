@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/button';
 import { BookButton } from './BookButton';
 import { UnbookButton } from './UnbookButton';
 import { PrivateBadge } from './PrivateBadge';
-import { HandExternalLinkIcon, handInk } from './HandIcons';
+import { HandExternalLinkIcon } from './HandIcons';
+import { getStickerLook, stickerInk } from './Sticker';
 import { getItemImage } from '../utils/getItemImage';
 import { getItemUrl } from '../utils/getItemUrl';
 import { getCardLook } from '../utils/getCardLook';
@@ -26,6 +27,8 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const image = getItemImage(item);
   const itemUrl = getItemUrl(item);
   const look = getCardLook(item.id);
+  const linkSticker = getStickerLook(`${item.id}-link`);
+  const bookSticker = getStickerLook(`${item.id}-book`);
 
   const currentUserEmail = session?.user?.email;
   const isBookedByCurrentUser =
@@ -37,6 +40,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       version={item.version || 1}
       status={item.status}
       bookedBy={item.bookedBy}
+      sticker={bookSticker}
     />
   );
 
@@ -45,10 +49,8 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       asChild
       variant="ghost"
       size="icon"
-      className={cn(
-        'relative size-10 cursor-pointer rounded-full bg-transparent hover:bg-background dark:hover:bg-background hover:text-[#b83c2b] hover:rotate-3',
-        handInk,
-      )}
+      className="relative size-10 cursor-pointer bg-transparent hover:bg-transparent dark:hover:bg-transparent hover:rotate-6 hover:scale-110"
+      style={stickerInk(linkSticker)}
     >
       <a
         href={item.shopLink}
@@ -56,7 +58,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         rel="noopener noreferrer"
         aria-label="Open external link"
       >
-        <HandExternalLinkIcon className="size-6" />
+        <HandExternalLinkIcon className="size-10" sticker={linkSticker.paper} />
       </a>
     </Button>
   );
@@ -101,36 +103,27 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         />
       </Link>
 
-      <div className="px-1 pt-3">
-        {/* Only admins receive private items, so this is never shown to guests. */}
-        {item.isPrivate && <PrivateBadge className="mb-2" />}
-        {item.brand && <p className="font-secondary text-xs text-navy/60">{formatBrand(item.brand)}</p>}
-        <h3 className="font-secondary text-base leading-snug text-navy line-clamp-2">
-          <Link href={itemUrl} className="hover:underline focus:outline-none">
-            {item.title}
-          </Link>
-        </h3>
-      </div>
+      <div className="flex items-end gap-2 px-1 pt-3">
+        <div className="min-w-0 flex-1">
+          {/* Only admins receive private items, so this is never shown to guests. */}
+          {item.isPrivate && <PrivateBadge className="mb-2" />}
+          {item.brand && <p className="font-secondary text-xs text-navy/60">{formatBrand(item.brand)}</p>}
+          <h3 className="font-secondary text-base leading-snug text-navy line-clamp-2">
+            <Link href={itemUrl} className="hover:underline focus:outline-none">
+              {item.title}
+            </Link>
+          </h3>
+        </div>
 
-      {item.status === 'available' && (
-        <>
-          {/* Mobile */}
-          <div className="md:hidden absolute top-3 right-3 z-10 flex items-start gap-2">
+        {/* Icons sit at the bottom of the card, next to the title. On desktop
+            they appear on hover (or keyboard focus); phones always show them. */}
+        {item.status === 'available' && (
+          <div className="-mr-1 -mb-1 flex shrink-0 items-center transition-opacity duration-300 md:opacity-0 md:group-hover/card:opacity-100 md:focus-within:opacity-100">
             {shopLinkButton}
             <div>{bookButton}</div>
           </div>
-
-          {/* Desktop */}
-          <div className="hidden md:block pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
-
-            {shopLinkButton && (
-              <div className="absolute top-3 left-3 pointer-events-auto">{shopLinkButton}</div>
-            )}
-
-            <div className="absolute top-3 right-3 pointer-events-auto">{bookButton}</div>
-          </div>
-        </>
-      )}
+        )}
+      </div>
 
       {/* Clicks pass through the overlay, so reserved gifts can still be opened. */}
       {item.status === 'booked' && (

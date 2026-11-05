@@ -3,23 +3,41 @@ import type { SVGProps } from 'react';
 // Hand-drawn style icons: slightly wobbly marker strokes that match the
 // handwritten card font. They inherit color from `currentColor`.
 
-type IconProps = SVGProps<SVGSVGElement>;
+type IconProps = SVGProps<SVGSVGElement> & {
+  // Sticker colour: draws a thick rounded outline that follows the icon's
+  // shape behind it, like a die-cut sticker.
+  sticker?: string;
+};
 
 // Red ink used for the hand-drawn card buttons.
 export const handInk = 'text-[#b83c2b]';
 
-function HandIcon({ children, ...props }: IconProps) {
+function HandIcon({ children, sticker, ...props }: IconProps) {
   return (
     <svg
-      viewBox="0 0 24 24"
+      // A sticker widens the canvas so the drawing sits smaller inside
+      // a thicker outline.
+      viewBox={sticker ? '-7 -7 38 38' : '0 0 24 24'}
       fill="none"
       stroke="currentColor"
       strokeWidth={1.9}
       strokeLinecap="round"
       strokeLinejoin="round"
+      overflow="visible"
       aria-hidden
       {...props}
     >
+      {sticker && (
+        // The same drawing again, filled and stroked very thick: it spreads
+        // into a soft blob around the icon. CSS overrides each path's own width.
+        <g
+          stroke={sticker}
+          fill={sticker}
+          className="[&_path]:[stroke-width:13px]"
+        >
+          {children}
+        </g>
+      )}
       {children}
     </svg>
   );

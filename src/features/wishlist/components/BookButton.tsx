@@ -8,19 +8,23 @@ import { Button } from '@/components/ui/button';
 import { bookGift } from '../actions/bookGift';
 import { announceGiftBooked } from '../utils/giftBookedEvent';
 import { HandGiftIcon, handInk } from './HandIcons';
+import { stickerInk, type StickerLook } from './Sticker';
 import { cn } from '@/lib/utils';
 
-// Just the red icon: no fill, no border.
-const iconButton = 'relative size-10 rounded-full bg-transparent hover:bg-background dark:hover:bg-background hover:text-[#b83c2b] hover:-rotate-6';
+// Icon-only button; with a sticker the icon gets a die-cut outline.
+const iconButton =
+  'relative size-10 bg-transparent hover:bg-transparent dark:hover:bg-transparent hover:-rotate-6 hover:scale-110';
 
 type BookButtonProps = {
   id: string;
   version: number;
   status: WishlistItem['status'];
   bookedBy?: WishlistItem['bookedBy'];
+  // Die-cut sticker colours; without it the icon is plain red.
+  sticker?: StickerLook;
 };
 
-export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
+export function BookButton({ id, version, status, bookedBy, sticker }: BookButtonProps) {
   const { data: session, status: sessionStatus } = useSession();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -35,10 +39,11 @@ export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
         disabled
         variant="ghost"
         size="icon"
-        className={cn(iconButton, handInk)}
+        className={cn(iconButton, !sticker && handInk)}
+        style={sticker && stickerInk(sticker)}
         aria-label={isMine ? 'Your booking' : 'Already booked'}
       >
-        <HandGiftIcon className="size-6" />
+        <HandGiftIcon className="size-10" sticker={sticker?.paper} />
       </Button>
     );
   }
@@ -72,11 +77,12 @@ export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
         onClick={handleBook}
         disabled={isPending || sessionStatus === 'loading'}
         variant="ghost"
-        className={cn(iconButton, handInk, 'cursor-pointer')}
+        className={cn(iconButton, !sticker && handInk, 'cursor-pointer')}
+        style={sticker && stickerInk(sticker)}
         size="icon"
         aria-label={isPending ? 'Booking...' : 'Book'}
       >
-        <HandGiftIcon className="size-6" />
+        <HandGiftIcon className="size-10" sticker={sticker?.paper} />
       </Button>
       {error && (
         <p role="alert" className="mt-2 text-center text-sm text-red-500">
