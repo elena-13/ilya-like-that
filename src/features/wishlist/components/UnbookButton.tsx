@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { X } from 'lucide-react';
+import { HandCrossIcon } from './HandIcons';
 
 import { Button } from '@/components/ui/button';
 import { unbookGift } from '../actions/unbookGift';
@@ -36,7 +36,7 @@ export function UnbookButton({ id }: UnbookButtonProps) {
         className="bg-navy text-white rounded-full font-secondary text-xs cursor-pointer"
         aria-label="Cancel booking"
       >
-        <X />
+        <HandCrossIcon className="size-5" />
       </Button>
       {error && (
         <p role="alert" className="mt-2 text-center text-sm text-red-500">

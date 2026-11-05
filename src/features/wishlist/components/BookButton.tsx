@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import { Gift } from 'lucide-react';
 
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { bookGift } from '../actions/bookGift';
 import { announceGiftBooked } from '../utils/giftBookedEvent';
+import { HandGiftIcon } from './HandIcons';
 
 type BookButtonProps = {
   id: string;
@@ -28,7 +28,7 @@ export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
 
     return (
       <Button disabled variant="secondary" size="sm">
-        <Gift className="h-4 w-4" />
+        <HandGiftIcon className="size-5" />
         {isMine ? 'Your booking' : 'Already booked'}
       </Button>
     );
@@ -66,7 +66,7 @@ export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
         className="cursor-pointer"
         size="sm"
       >
-        <Gift className="h-4 w-4" />
+        <HandGiftIcon className="size-5" />
         {isPending ? 'Booking...' : 'Book'}
       </Button>
       {error && (
