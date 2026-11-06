@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, type MouseEvent } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
@@ -15,7 +15,11 @@ import { DEFAULT_STICKER, stickerPillClass, PillIcon, type StickerLook } from '.
 import { bookGift } from '../actions/bookGift';
 import { unbookGift } from '../actions/unbookGift';
 import type { BookingErrorCode } from '../actions/errors';
-import { announceGiftBooked } from '../utils/giftBookedEvent';
+import {
+  announceGiftBooked,
+  announceGiftBookingFailed,
+  getBurstOrigin,
+} from '../utils/giftBookedEvent';
 
 type ItemReservationProps = {
   id: string;
@@ -50,29 +54,29 @@ export default function ItemReservation({
   const isBookedByCurrentUser =
     isBooked && Boolean(currentUserEmail) && bookedBy === currentUserEmail;
 
-  const runAction = (action: () => ReturnType<typeof bookGift>, onSuccess?: () => void) => {
+  const runAction = (action: () => ReturnType<typeof bookGift>, onFailure?: () => void) => {
     setError(null);
 
     startTransition(async () => {
       const result = await action();
 
       if (!result.success) {
+        onFailure?.();
         setError(result.error);
-        return;
       }
-
-      onSuccess?.();
     });
   };
 
-  const handleBook = () => {
+  const handleBook = (event: MouseEvent<HTMLButtonElement>) => {
     // Guests have to sign in before booking; send them to Google and bring them back here.
     if (!currentUserEmail) {
       signIn('google', { callbackUrl: window.location.href });
       return;
     }
 
-    runAction(() => bookGift(id, version), announceGiftBooked);
+    // Celebrate right away instead of after the server round-trip.
+    announceGiftBooked(getBurstOrigin(event.currentTarget));
+    runAction(() => bookGift(id, version), announceGiftBookingFailed);
   };
 
   const handleUnbook = () => runAction(() => unbookGift(id));
