@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useTransition, type ReactNode } from 'react';
+import { useState, useTransition } from 'react';
+import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { paths } from '@/lib/paths';
 import { cardShadowClass } from '../styles';
 import { HandCrossIcon, HandGiftIcon } from './HandIcons';
 import { DEFAULT_STICKER, stickerPillClass, PillIcon, type StickerLook } from './Sticker';
@@ -20,8 +22,6 @@ type ItemReservationProps = {
   bookedBy?: WishlistItem['bookedBy'];
   // Gift sticker colours, the same as this gift's Book icon on the list.
   sticker?: StickerLook;
-  // Other buttons for the same row (e.g. View product), shown before Book.
-  actions?: ReactNode;
 };
 
 /**
@@ -35,7 +35,6 @@ export default function ItemReservation({
   status,
   bookedBy,
   sticker = DEFAULT_STICKER,
-  actions,
 }: ItemReservationProps) {
   const { data: session, status: sessionStatus } = useSession();
   const [isPending, startTransition] = useTransition();
@@ -99,10 +98,18 @@ export default function ItemReservation({
         </div>
       </div>
 
-      {/* Buttons: outlined pills with stickers, like on the cards, in one
-          row at the bottom right under the status block */}
+      {/* Booking actions: outlined sticker pills in one row at the bottom
+          right. My gifts is on every item page so people find the list of
+          what they promised (otherwise it's only in the avatar menu); the
+          main action for this gift sits last, next to it. */}
       <div className="flex flex-wrap justify-end gap-3">
-        {actions}
+        <Button asChild variant="outline" className={stickerPillClass}>
+          <Link href={paths.myGifts()}>
+            <PillIcon icon={HandGiftIcon} sticker={DEFAULT_STICKER} />
+            My gifts
+          </Link>
+        </Button>
+
         {!isBooked && (
           <Button
             onClick={handleBook}

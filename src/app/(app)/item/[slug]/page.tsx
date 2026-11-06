@@ -103,6 +103,17 @@ export default async function ItemPage({ params }: Props) {
             <h1 className="font-secondary text-3xl leading-tight text-navy md:text-4xl">
               {item.title}
             </h1>
+
+            {/* Where to buy it belongs with what the gift is, not with the
+                booking buttons: a quieter pill under the title. */}
+            {item.shopLink && (
+              <Button asChild variant="outline" className={cn(stickerPillClass, 'mt-4')}>
+                <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
+                  <PillIcon icon={HandExternalLinkIcon} sticker={stickers.link} />
+                  View in the shop
+                </a>
+              </Button>
+            )}
           </div>
 
           <ItemReservation
@@ -111,16 +122,6 @@ export default async function ItemPage({ params }: Props) {
             status={item.status}
             bookedBy={item.bookedBy}
             sticker={stickers.book}
-            actions={
-              item.shopLink && (
-                <Button asChild variant="outline" className={stickerPillClass}>
-                  <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
-                    <PillIcon icon={HandExternalLinkIcon} sticker={stickers.link} />
-                    View product
-                  </a>
-                </Button>
-              )
-            }
           />
         </div>
       </main>
