@@ -6,6 +6,7 @@ import WishlistList from '@/features/wishlist/components/WishlistList';
 import { StarsField } from '@/features/wishlist/components/StarsField';
 import { HeroClouds } from '@/widgets/HeroClouds/HeroClouds';
 import { BirthdayInviteProvider } from '@/features/invite/BirthdayInviteProvider';
+import { hasInviteAccess } from '@/features/invite/inviteAccess';
 import { OwlPeek } from '@/features/invite/components/OwlPeek';
 import { OwlRest } from '@/features/invite/components/OwlRest';
 import { LanguageSwitcher } from '@/widgets/LanguageSwitcher/LanguageSwitcher';
@@ -15,12 +16,15 @@ import { getCurrentUser } from '@/lib/auth-utils';
 
 export default async function Home() {
   const user = await getCurrentUser();
-  const items = await getWishlistItems(user?.isAdmin);
+  const [items, invited] = await Promise.all([
+    getWishlistItems(user?.isAdmin),
+    hasInviteAccess(),
+  ]);
   const t = await getTranslations('home');
   const tMeta = await getTranslations('metadata');
 
   return (
-    <BirthdayInviteProvider>
+    <BirthdayInviteProvider invited={invited}>
       <main className="min-h-screen">
         <section
           aria-label={t('introLabel')}
