@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { ExternalLink } from 'lucide-react';
 
 import { getItemById } from '@/features/wishlist/data/getItemById';
 import { canViewItem } from '@/features/wishlist/data/visibility';
@@ -12,6 +11,16 @@ import ItemReservation from '@/features/wishlist/components/ItemReservation';
 import { PrivateBadge } from '@/features/wishlist/components/PrivateBadge';
 import PageHeader from '@/widgets/PageHeader/PageHeader';
 import { Button } from '@/components/ui/button';
+import { CardTape } from '@/features/wishlist/components/CardTape';
+import { HandExternalLinkIcon } from '@/features/wishlist/components/HandIcons';
+import {
+  getStickerLook,
+  stickerPillClass,
+  stickerPillIconClass,
+} from '@/features/wishlist/components/Sticker';
+import { getCardLook } from '@/features/wishlist/utils/getCardLook';
+import { formatBrand } from '@/features/wishlist/utils/formatBrand';
+import { cn } from '@/lib/utils';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -59,46 +68,67 @@ export default async function ItemPage({ params }: Props) {
   }
 
   const image = getItemImage(item);
+  // Same tape, tilt and sticker colours as this gift's card on the list.
+  const look = getCardLook(item.id);
+  const linkSticker = getStickerLook(`${item.id}-link`);
+  const bookSticker = getStickerLook(`${item.id}-book`);
 
   return (
     <>
       <PageHeader />
-      <main className="mx-auto grid max-w-5xl gap-8 px-4 py-8 md:grid-cols-2 md:py-12">
-        {/* Item image */}
-        <div className="overflow-hidden rounded-4xl bg-white ring-1 ring-black/5 shadow-sm">
-          <Image
-            src={image.src}
-            alt={image.alt}
-            width={image.width}
-            height={image.height}
-            sizes="(min-width:768px) 50vw, 100vw"
-            className="h-auto w-full object-cover"
-            priority
-          />
+      <main className="mx-auto grid max-w-5xl gap-10 px-4 py-10 md:grid-cols-2 md:py-14">
+        {/* Item photo, as a taped card like on the list */}
+        <div
+          className={cn(
+            '@container relative self-start rounded-4xl bg-white p-4',
+            'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_8px_20px_-8px_rgba(0,0,0,0.15)]',
+            look.tilt,
+          )}
+        >
+          <CardTape look={look} />
+          <div className="overflow-hidden rounded-3xl bg-white">
+            <Image
+              src={image.src}
+              alt={image.alt}
+              width={image.width}
+              height={image.height}
+              sizes="(min-width:768px) 50vw, 100vw"
+              className="h-auto w-full object-contain p-6"
+              priority
+            />
+          </div>
         </div>
 
         {/* Details + reservation */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-10">
           <div>
             {item.isPrivate && <PrivateBadge className="mb-3" />}
-            {item.brand && <p className="font-secondary text-sm text-navy/60">{item.brand}</p>}
-            <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.title}</h1>
+            {item.brand && (
+              <p className="font-secondary text-sm text-navy/60">{formatBrand(item.brand)}</p>
+            )}
+            <h1 className="font-secondary text-3xl leading-tight text-navy md:text-4xl">
+              {item.title}
+            </h1>
           </div>
-
-          {item.shopLink && (
-            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4" />
-                View product
-              </a>
-            </Button>
-          )}
 
           <ItemReservation
             id={String(item.id)}
             version={item.version || 1}
             status={item.status}
             bookedBy={item.bookedBy}
+            sticker={bookSticker}
+            actions={
+              item.shopLink && (
+                <Button asChild variant="outline" className={stickerPillClass}>
+                  <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
+                    <span className={stickerPillIconClass} style={{ color: linkSticker.ink }}>
+                      <HandExternalLinkIcon className="size-8" sticker={linkSticker.paper} />
+                    </span>
+                    View product
+                  </a>
+                </Button>
+              )
+            }
           />
         </div>
       </main>

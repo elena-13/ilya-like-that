@@ -32,7 +32,7 @@ test.describe.serial('booking a gift', () => {
     // Booking plays the star shower, which adds a Pixi canvas.
     await expect(page.locator('canvas')).toHaveCount(canvasesBefore + 1);
     await expect(page.getByText('You reserved this gift.')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Unbook' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Cancel booking' })).toBeVisible();
   });
 
   test('booked gift appears in My gifts', async ({ page, context }) => {
@@ -48,7 +48,7 @@ test.describe.serial('booking a gift', () => {
 
     await expect(page.getByText('Someone has already reserved this gift.')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Book', exact: true })).toBeHidden();
-    await expect(page.getByRole('button', { name: 'Unbook' })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Cancel booking' })).toBeHidden();
   });
 
   test('user can unbook from My gifts', async ({ page, context }) => {

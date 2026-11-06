@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- blue rounded square -->
+  <rect width="24" height="24" rx="5.5" fill="#6b84c8"/>
+  <!-- white castle: two towers with pointed roofs, a wall between them and an arched gate -->
+  <g fill="#fffaf0" stroke="#fffaf0" stroke-width="0.5" stroke-linejoin="round">
+    <path d="M4 7.9L6.25 3.3L8.5 7.9Z"/>
+    <path d="M15.5 7.9L17.75 3.3L20 7.9Z"/>
+    <path d="M4.2 20.6L4.2 11.4L3.6 11.4L3.6 8.8L4.8 8.8L4.8 9.7L5.7 9.7L5.7 8.8L6.8 8.8L6.8 9.7L7.7 9.7L7.7 8.8L8.9 8.8L8.9 11.4L8.3 11.4L8.3 13.5L9.3 13.5L9.3 12.4L10.5 12.4L10.5 13.5L11.4 13.5L11.4 12.4L12.6 12.4L12.6 13.5L13.5 13.5L13.5 12.4L14.7 12.4L14.7 13.5L15.7 13.5L15.7 11.4L15.1 11.4L15.1 8.8L16.3 8.8L16.3 9.7L17.2 9.7L17.2 8.8L18.3 8.8L18.3 9.7L19.2 9.7L19.2 8.8L20.4 8.8L20.4 11.4L19.8 11.4L19.8 20.6L13.2 20.6L13.2 17.8C13.2 16.1 10.8 16.1 10.8 17.8L10.8 20.6Z"/>
+  </g>
+</svg>

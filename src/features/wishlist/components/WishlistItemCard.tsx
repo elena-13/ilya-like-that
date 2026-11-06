@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { BookButton } from './BookButton';
 import { PrivateBadge } from './PrivateBadge';
 import { BookedLabel } from './BookedLabel';
+import { CardTape } from './CardTape';
 import { UnbookButton } from './UnbookButton';
 import { HandExternalLinkIcon } from './HandIcons';
 import { getStickerLook, stickerInk } from './Sticker';
@@ -77,22 +78,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       )}
       aria-label={item.title}
     >
-      {/* tape: the outer span places it and casts the shadow, the inner one
-          is clipped to the torn shape (a clip would cut the shadow off) */}
-      <span
-        aria-hidden
-        className={cn(
-          'pointer-events-none absolute -top-[6cqw] z-20',
-          'drop-shadow-[0_1px_1.5px_rgb(0_0_0/0.22)]',
-          look.tape,
-          look.tapeSize,
-        )}
-      >
-        <span
-          className={cn('tape-gingham tape-wrinkles block size-full', look.tapeWrinkles)}
-          style={{ clipPath: look.tapeEdge }}
-        />
-      </span>
+      <CardTape look={look} />
 
       <div className="relative">
         <Link
