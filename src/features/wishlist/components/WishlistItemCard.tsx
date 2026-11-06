@@ -40,6 +40,9 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       className={cn(
         'group/card @container relative mb-10 mt-4 inline-block w-full rounded-4xl bg-white p-3 pb-4',
         cardShadowClass,
+        // Only transform changes on hover, so the browser animates it on the
+        // GPU by itself. Cards aren't forced onto their own layer for good:
+        // a permanently composited tilted card renders its text soft.
         'transition-transform duration-300 hover:rotate-0 hover:-translate-y-1',
         look.tilt,
       )}
@@ -60,15 +63,15 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
             alt={image.alt}
             fill
             sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
-            className="object-contain p-4"
+            // Booked: the photo itself is blurred and faded (fogged glass). A
+            // plain filter is drawn once with the card and reused when the card
+            // moves or scrolls; backdrop-filter re-blurred what's behind it on
+            // every frame. No forced GPU layer here: it would also pull the pill
+            // and tape onto layers, and tilted layers render text soft.
+            className={cn('object-contain p-4', isBooked && 'blur-[3px] saturate-50')}
           />
-          {/* Booked: fogged glass over the photo, so the gift reads as taken
-              but you can still make it out. */}
           {isBooked && (
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-white/40 backdrop-blur-[3px] backdrop-saturate-50"
-            />
+            <span aria-hidden className="pointer-events-none absolute inset-0 bg-white/40" />
           )}
         </Link>
 

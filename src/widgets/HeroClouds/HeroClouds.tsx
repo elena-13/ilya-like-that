@@ -37,8 +37,12 @@ export function HeroClouds() {
   }, []);
 
   return (
-    <div ref={rootRef} aria-hidden className="pointer-events-none absolute inset-0 [--px:0] [--py:0]">
-      <div className="absolute inset-0 z-10 transition-[translate] duration-500 ease-out [translate:calc(var(--px)*-28px)_calc(var(--py)*-14px)]">
+    <div
+      ref={rootRef}
+      aria-hidden
+      className="pointer-events-none absolute inset-0 [--px:0] [--py:0]"
+    >
+      <div className="absolute inset-0 z-10 transition-[translate] duration-500 ease-out will-change-[translate] [translate:calc(var(--px)*-28px)_calc(var(--py)*-14px)]">
         {/* right cloud */}
         <div className="absolute top-1/2 left-1/2 w-full max-w-none">
           <Image
@@ -47,6 +51,9 @@ export function HeroClouds() {
             width={CLOUD.width}
             height={CLOUD.height}
             priority
+            // Without sizes the browser picked the 3840px file; the cloud is
+            // about as wide as the screen.
+            sizes="100vw"
             className="h-full w-full object-contain transform-gpu will-change-transform motion-safe:animate-[cloud-drift-1_18s_ease-in-out_infinite]"
           />
         </div>
@@ -59,6 +66,7 @@ export function HeroClouds() {
             width={CLOUD.width}
             height={CLOUD.height}
             priority
+            sizes="100vw"
             className="h-full w-full -scale-x-100 object-contain transform-gpu will-change-transform motion-safe:animate-[cloud-drift-2_23s_ease-in-out_infinite] [animation-delay:-7s]"
           />
         </div>

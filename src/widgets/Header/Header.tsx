@@ -13,7 +13,9 @@ export default function Header() {
   const user = session?.user;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">
+    // Solid background: a backdrop blur under a 95% opaque header was barely
+    // visible but re-blurred the page on every scroll frame.
+    <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* left */}
