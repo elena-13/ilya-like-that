@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { ExternalLink } from 'lucide-react';
 
 import { getItemById } from '@/features/wishlist/data/getItemById';
 import { canViewItem } from '@/features/wishlist/data/visibility';
@@ -11,7 +10,13 @@ import { getItemUrl } from '@/features/wishlist/utils/getItemUrl';
 import ItemReservation from '@/features/wishlist/components/ItemReservation';
 import { PrivateBadge } from '@/features/wishlist/components/PrivateBadge';
 import PageHeader from '@/widgets/PageHeader/PageHeader';
-import { Button } from '@/components/ui/button';
+import { CardTape } from '@/features/wishlist/components/CardTape';
+import { ShopLinkPill } from '@/features/wishlist/components/ShopLinkPill';
+import { getItemStickers } from '@/features/wishlist/components/Sticker';
+import { getCardLook } from '@/features/wishlist/utils/getCardLook';
+import { formatBrand } from '@/features/wishlist/utils/formatBrand';
+import { cn } from '@/lib/utils';
+import { softCardClass } from '@/features/wishlist/styles';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -59,46 +64,54 @@ export default async function ItemPage({ params }: Props) {
   }
 
   const image = getItemImage(item);
+  // Same tape, tilt and sticker colours as this gift's card on the list.
+  const look = getCardLook(item.id);
+  const stickers = getItemStickers(item.id);
 
   return (
     <>
       <PageHeader />
-      <main className="mx-auto grid max-w-5xl gap-8 px-4 py-8 md:grid-cols-2 md:py-12">
-        {/* Item image */}
-        <div className="overflow-hidden rounded-4xl bg-white ring-1 ring-black/5 shadow-sm">
-          <Image
-            src={image.src}
-            alt={image.alt}
-            width={image.width}
-            height={image.height}
-            sizes="(min-width:768px) 50vw, 100vw"
-            className="h-auto w-full object-cover"
-            priority
-          />
+      <main className="mx-auto grid max-w-5xl gap-10 px-4 py-10 md:grid-cols-2 md:py-14">
+        {/* Item photo, as a taped card like on the list */}
+        <div className={cn('@container relative self-start p-4', softCardClass, look.tilt)}>
+          <CardTape look={look} />
+          <div className="overflow-hidden rounded-3xl bg-white">
+            <Image
+              src={image.src}
+              alt={image.alt}
+              width={image.width}
+              height={image.height}
+              sizes="(min-width:768px) 50vw, 100vw"
+              className="h-auto w-full object-contain p-6"
+              priority
+            />
+          </div>
         </div>
 
         {/* Details + reservation */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-10">
           <div>
             {item.isPrivate && <PrivateBadge className="mb-3" />}
-            {item.brand && <p className="font-secondary text-sm text-navy/60">{item.brand}</p>}
-            <h1 className="text-2xl font-bold leading-snug text-navy md:text-3xl">{item.title}</h1>
-          </div>
+            {item.brand && (
+              <p className="font-secondary text-sm text-navy/60">{formatBrand(item.brand)}</p>
+            )}
+            <h1 className="font-secondary text-3xl leading-tight text-navy md:text-4xl">
+              {item.title}
+            </h1>
 
-          {item.shopLink && (
-            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4" />
-                View product
-              </a>
-            </Button>
-          )}
+            {/* Where to buy it belongs with what the gift is, not with the
+                booking buttons: a quieter pill under the title. */}
+            {item.shopLink && (
+              <ShopLinkPill href={item.shopLink} sticker={stickers.link} className="mt-4" />
+            )}
+          </div>
 
           <ItemReservation
             id={String(item.id)}
             version={item.version || 1}
             status={item.status}
             bookedBy={item.bookedBy}
+            sticker={stickers.book}
           />
         </div>
       </main>

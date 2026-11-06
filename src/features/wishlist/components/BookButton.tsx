@@ -2,37 +2,28 @@
 
 import { useState, useTransition } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import { Gift } from 'lucide-react';
 
-import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { bookGift } from '../actions/bookGift';
 import { announceGiftBooked } from '../utils/giftBookedEvent';
+import { HandGiftIcon } from './HandIcons';
+import { stickerIconButtonClass, stickerInk, type StickerLook } from './Sticker';
 
 type BookButtonProps = {
   id: string;
   version: number;
-  status: WishlistItem['status'];
-  bookedBy?: WishlistItem['bookedBy'];
+  // Die-cut sticker colours for the gift icon.
+  sticker: StickerLook;
 };
 
-export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
+// Icon-only Book button for an available gift's card.
+export function BookButton({ id, version, sticker }: BookButtonProps) {
   const { data: session, status: sessionStatus } = useSession();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const currentUserEmail = session?.user?.email;
-
-  if (status === 'booked') {
-    const isMine = Boolean(currentUserEmail) && currentUserEmail === bookedBy;
-
-    return (
-      <Button disabled variant="secondary" size="sm">
-        <Gift className="h-4 w-4" />
-        {isMine ? 'Your booking' : 'Already booked'}
-      </Button>
-    );
-  }
 
   const handleBook = () => {
     // Guests have to sign in before booking; send them to Google and bring them back here.
@@ -62,12 +53,13 @@ export function BookButton({ id, version, status, bookedBy }: BookButtonProps) {
       <Button
         onClick={handleBook}
         disabled={isPending || sessionStatus === 'loading'}
-        variant="secondary"
-        className="cursor-pointer"
-        size="sm"
+        variant="ghost"
+        size="icon"
+        className={cn(stickerIconButtonClass, 'hover:-rotate-6')}
+        style={stickerInk(sticker)}
+        aria-label={isPending ? 'Booking...' : 'Book'}
       >
-        <Gift className="h-4 w-4" />
-        {isPending ? 'Booking...' : 'Book'}
+        <HandGiftIcon className="size-10" sticker={sticker.paper} />
       </Button>
       {error && (
         <p role="alert" className="mt-2 text-center text-sm text-red-500">

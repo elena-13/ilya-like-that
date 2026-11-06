@@ -18,10 +18,10 @@ export default async function MyGiftsPage() {
   return (
     <>
       <PageHeader />
-      <main className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 md:py-12">
+      <main className="mx-auto flex max-w-3xl flex-col gap-10 px-4 py-10 md:py-14">
         <div>
-          <h1 className="text-2xl font-bold text-navy md:text-3xl">My gifts</h1>
-          <p className="mt-1 font-secondary text-navy/60">
+          <h1 className="font-secondary text-3xl leading-tight text-navy md:text-4xl">My gifts</h1>
+          <p className="mt-2 font-secondary text-navy/60">
             Everything you&apos;ve promised to gift. Changed your mind? Cancel a booking so someone
             else can pick it.
           </p>

@@ -19,7 +19,7 @@ Layout spec / content mockup for `src/app/item/[slug]/page.tsx`.
 
 **Brand:** {item.brand}
 
-[View product →]({item.link})
+[View in the shop ↗]({item.link})  ← quiet pill under the title, only when there is a link
 
 ---
 
@@ -42,14 +42,18 @@ Layout spec / content mockup for `src/app/item/[slug]/page.tsx`.
 
 ## Buttons
 
-| State                | Visible button | Action                              |
-| -------------------- | -------------- | ----------------------------------- |
-| `isBooked === false` | **Book**       | Reserve the item, set `bookedBy`    |
-| `isBooked === true`  | **Unbook**     | Cancel reservation, clear `bookedBy`|
+One row at the bottom right, under the status block. **My gifts** is always
+first; the action for this gift sits last.
+
+| State                       | Buttons                        |
+| --------------------------- | ------------------------------ |
+| Available                   | **My gifts**, **Book**         |
+| Booked by you               | **My gifts**, **Cancel booking** |
+| Booked by someone else      | **My gifts**                   |
 
 ```
-[ Book ]      ← shown when item is available
-[ Unbook ]    ← shown when item is already reserved
+                                   [ My gifts ] [ Book ]
+                         [ My gifts ] [ Cancel booking ]
 ```
 
 ---

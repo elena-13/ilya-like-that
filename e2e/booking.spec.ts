@@ -32,7 +32,7 @@ test.describe.serial('booking a gift', () => {
     // Booking plays the star shower, which adds a Pixi canvas.
     await expect(page.locator('canvas')).toHaveCount(canvasesBefore + 1);
     await expect(page.getByText('You reserved this gift.')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Unbook' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Cancel booking' })).toBeVisible();
   });
 
   test('booked gift appears in My gifts', async ({ page, context }) => {
@@ -48,7 +48,7 @@ test.describe.serial('booking a gift', () => {
 
     await expect(page.getByText('Someone has already reserved this gift.')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Book', exact: true })).toBeHidden();
-    await expect(page.getByRole('button', { name: 'Unbook' })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Cancel booking' })).toBeHidden();
   });
 
   test('user can unbook from My gifts', async ({ page, context }) => {
@@ -80,17 +80,20 @@ test.describe('booking from the home page card', () => {
     const card = page.getByRole('article', { name: GIFT_TITLE });
     const canvasesBefore = await page.locator('canvas').count();
 
-    // On desktop the Book button sits in an overlay that appears on hover.
+    // On desktop the Book button appears when hovering the card.
     await card.hover();
     await card.getByRole('button', { name: 'Book', exact: true }).click();
 
-    await expect(card.getByText('reserved by you')).toBeVisible();
+    // A booked card is labelled "your gift" for the person who booked it.
+    await expect(card.getByText('your gift').filter({ visible: true })).toBeVisible();
     // Booking from the card plays the star shower, which adds a Pixi canvas.
     await expect(page.locator('canvas')).toHaveCount(canvasesBefore + 1);
 
+    // On desktop Cancel booking appears when hovering the card.
+    await card.hover();
     await card.getByRole('button', { name: 'Cancel booking' }).click();
 
-    await expect(card.getByText('reserved by you')).toBeHidden();
+    await expect(card.getByText('your gift').filter({ visible: true })).toBeHidden();
     await card.hover();
     await expect(card.getByRole('button', { name: 'Book', exact: true })).toBeVisible();
   });

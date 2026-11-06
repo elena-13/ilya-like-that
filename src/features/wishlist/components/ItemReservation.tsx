@@ -1,11 +1,16 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
-import { Gift, X, CheckCircle2, Lock } from 'lucide-react';
 
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { paths } from '@/lib/paths';
+import { cardShadowClass } from '../styles';
+import { HandCrossIcon, HandGiftIcon } from './HandIcons';
+import { DEFAULT_STICKER, stickerPillClass, PillIcon, type StickerLook } from './Sticker';
 import { bookGift } from '../actions/bookGift';
 import { unbookGift } from '../actions/unbookGift';
 import { announceGiftBooked } from '../utils/giftBookedEvent';
@@ -15,6 +20,8 @@ type ItemReservationProps = {
   version: number;
   status: WishlistItem['status'];
   bookedBy?: WishlistItem['bookedBy'];
+  // Gift sticker colours, the same as this gift's Book icon on the list.
+  sticker?: StickerLook;
 };
 
 /**
@@ -22,14 +29,21 @@ type ItemReservationProps = {
  * Both server actions revalidate the page, so the fresh server-rendered state
  * replaces this component's props after a successful change.
  */
-export default function ItemReservation({ id, version, status, bookedBy }: ItemReservationProps) {
+export default function ItemReservation({
+  id,
+  version,
+  status,
+  bookedBy,
+  sticker = DEFAULT_STICKER,
+}: ItemReservationProps) {
   const { data: session, status: sessionStatus } = useSession();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const currentUserEmail = session?.user?.email;
   const isBooked = status === 'booked';
-  const isBookedByCurrentUser = isBooked && Boolean(currentUserEmail) && bookedBy === currentUserEmail;
+  const isBookedByCurrentUser =
+    isBooked && Boolean(currentUserEmail) && bookedBy === currentUserEmail;
 
   const runAction = (action: () => ReturnType<typeof bookGift>, onSuccess?: () => void) => {
     setError(null);
@@ -58,67 +72,71 @@ export default function ItemReservation({ id, version, status, bookedBy }: ItemR
 
   const handleUnbook = () => runAction(() => unbookGift(id));
 
+  const giftSticker = (
+    <span style={{ color: sticker.ink }}>
+      <HandGiftIcon className="size-9" sticker={sticker.paper} />
+    </span>
+  );
+
   return (
-    <div className="space-y-4">
-      {/* Status block */}
-      {!isBooked ? (
-        <div
-          className="flex items-start gap-3 rounded-2xl bg-green-50 p-4 ring-1 ring-green-600/15"
-          aria-label="Available"
-        >
-          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-600" />
-          <div>
-            <p className="font-bold text-navy">Available</p>
-            <p className="text-sm text-navy/70">
-              This gift hasn&apos;t been reserved yet. Book it to let others know it&apos;s taken.
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div
-          className="flex items-start gap-3 rounded-2xl bg-yellow/40 p-4 ring-1 ring-navy/10"
-          aria-label="Reserved"
-        >
-          <Lock className="mt-0.5 h-5 w-5 shrink-0 text-navy" />
-          <div>
-            <p className="font-bold text-navy">Reserved</p>
-            <p className="text-sm text-navy/70">
-              {isBookedByCurrentUser
+    <div className="space-y-8">
+      {/* Status block: a small white card with the gift sticker */}
+      <div
+        className={cn('flex items-center gap-3 rounded-3xl bg-white p-4', cardShadowClass)}
+        aria-label={isBooked ? 'Reserved' : 'Available'}
+      >
+        <span className="shrink-0">{giftSticker}</span>
+        <div>
+          <p className="font-secondary text-lg text-navy">{isBooked ? 'Reserved' : 'Available'}</p>
+          <p className="text-sm text-navy/70">
+            {!isBooked
+              ? "This gift hasn't been reserved yet. Book it to let others know it's taken."
+              : isBookedByCurrentUser
                 ? 'You reserved this gift. No one else can book it while it stays reserved.'
                 : 'Someone has already reserved this gift.'}
-            </p>
-          </div>
+          </p>
         </div>
-      )}
+      </div>
 
-      {/* Buttons */}
-      {!isBooked && (
-        <Button
-          onClick={handleBook}
-          disabled={isPending || sessionStatus === 'loading'}
-          size="lg"
-          className="w-full cursor-pointer sm:w-auto"
-        >
-          <Gift className="h-4 w-4" />
-          {isPending ? 'Booking…' : 'Book'}
+      {/* Booking actions: outlined sticker pills in one row at the bottom
+          right. My gifts is on every item page so people find the list of
+          what they promised (otherwise it's only in the avatar menu); the
+          main action for this gift sits last, next to it. */}
+      <div className="flex flex-wrap justify-end gap-3">
+        <Button asChild variant="outline" className={stickerPillClass}>
+          <Link href={paths.myGifts()}>
+            <PillIcon icon={HandGiftIcon} sticker={DEFAULT_STICKER} />
+            My gifts
+          </Link>
         </Button>
-      )}
 
-      {isBookedByCurrentUser && (
-        <Button
-          onClick={handleUnbook}
-          disabled={isPending}
-          variant="outline"
-          size="lg"
-          className="w-full cursor-pointer sm:w-auto"
-        >
-          <X className="h-4 w-4" />
-          {isPending ? 'Cancelling…' : 'Unbook'}
-        </Button>
-      )}
+        {!isBooked && (
+          <Button
+            onClick={handleBook}
+            disabled={isPending || sessionStatus === 'loading'}
+            variant="outline"
+            className={stickerPillClass}
+          >
+            <PillIcon icon={HandGiftIcon} sticker={sticker} />
+            {isPending ? 'Booking…' : 'Book'}
+          </Button>
+        )}
+
+        {isBookedByCurrentUser && (
+          <Button
+            onClick={handleUnbook}
+            disabled={isPending}
+            variant="outline"
+            className={stickerPillClass}
+          >
+            <PillIcon icon={HandCrossIcon} sticker={sticker} />
+            {isPending ? 'Cancelling…' : 'Cancel booking'}
+          </Button>
+        )}
+      </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-500">
+        <p role="alert" className="text-right text-sm text-red-500">
           {error}
         </p>
       )}
