@@ -9,12 +9,10 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { useSession } from 'next-auth/react';
-
-import { INVITE_SHOW_EVERY_TIME, inviteSeenKey } from './config';
+import { INVITE_SEEN_KEY, INVITE_SHOW_EVERY_TIME } from './config';
 import { InviteOverlay } from './components/InviteOverlay';
 
-// Runs the birthday invite scenario once per signed-in user:
+// Runs the birthday invite scenario once per invited browser:
 //   'peek'   – the owl peeks out from behind the hero clouds (PEEKS in
 //              config, one OwlPeek per cloud) and takes off on the last one;
 //   'flight' – it flies to the front, drops the envelope, and the envelope
@@ -22,9 +20,11 @@ import { InviteOverlay } from './components/InviteOverlay';
 //   'rest'   – once the invite is closed (or was seen on an earlier visit),
 //              the owl sits on a cloud (OwlRest); clicking it reopens the
 //              invite, so guests can check the date again.
-// Signed-out visitors see none of it (no peeking, invite or resting owl).
-// In development, `?invite` in the URL replays it for a signed-in user who
-// has already seen it.
+// Only guests who opened the secret share link get it (`invited`, checked on
+// the server from the cookie the link sets, see inviteAccess.ts), whether or
+// not they ever sign in. Everyone else sees none of it (no peeking, invite or
+// resting owl). In development, `?invite` in the URL replays it for an invited
+// guest who has already seen it.
 
 type Phase = 'off' | 'peek' | 'flight' | 'rest';
 
@@ -68,18 +68,19 @@ const writeSeen = (key: string) => {
   }
 };
 
-export function BirthdayInviteProvider({ children }: { children: ReactNode }) {
-  const { data, status } = useSession();
-  const userId = data?.user?.id;
+type BirthdayInviteProviderProps = {
+  /** This visitor opened the share link (see inviteAccess.ts). */
+  invited: boolean;
+  children: ReactNode;
+};
+
+export function BirthdayInviteProvider({ invited, children }: BirthdayInviteProviderProps) {
   const [phase, setPhase] = useState<Phase>('off');
   const [peekStep, setPeekStep] = useState(0);
   const [takeoff, setTakeoff] = useState<DOMRect | null>(null);
 
   useEffect(() => {
-    if (status === 'loading') return;
-
-    // Signed-in guests only; signing out hides it straight away.
-    if (!userId) {
+    if (!invited) {
       setPhase('off');
       return;
     }
@@ -87,7 +88,7 @@ export function BirthdayInviteProvider({ children }: { children: ReactNode }) {
     const replay =
       process.env.NODE_ENV === 'development' &&
       new URLSearchParams(window.location.search).has('invite');
-    const due = replay || INVITE_SHOW_EVERY_TIME || !readSeen(inviteSeenKey(userId));
+    const due = replay || INVITE_SHOW_EVERY_TIME || !readSeen(INVITE_SEEN_KEY);
     if (!due) {
       setPhase('rest');
       return;
@@ -96,7 +97,7 @@ export function BirthdayInviteProvider({ children }: { children: ReactNode }) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setPeekStep(0);
     setPhase(reduceMotion ? 'flight' : 'peek');
-  }, [status, userId]);
+  }, [invited]);
 
   const peekDone = useCallback(() => setPeekStep((step) => step + 1), []);
 
@@ -106,13 +107,9 @@ export function BirthdayInviteProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const close = useCallback(() => {
-    if (!userId) {
-      setPhase('off');
-      return;
-    }
-    writeSeen(inviteSeenKey(userId));
+    writeSeen(INVITE_SEEN_KEY);
     setPhase('rest');
-  }, [userId]);
+  }, []);
 
   const reopen = useCallback(() => {
     setTakeoff(null);
