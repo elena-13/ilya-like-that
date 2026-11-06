@@ -78,7 +78,7 @@ function MyGiftRow({ item }: { item: WishlistItem }) {
         </h2>
       </div>
 
-      <div className="flex w-full shrink-0 items-center justify-end gap-2 sm:w-auto">
+      <div className="flex w-full shrink-0 flex-wrap items-center justify-end gap-2 sm:w-auto sm:flex-nowrap">
         {item.shopLink && <ShopLinkPill href={item.shopLink} sticker={stickers.link} compact />}
         <UnbookButton id={String(item.id)} sticker={stickers.book} compact />
       </div>
