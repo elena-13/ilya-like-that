@@ -43,13 +43,18 @@ export default async function Home() {
             </div>
 
             <div className="relative flex items-center justify-center text-center flex-col gap-6 lg:gap-10 p-6 lg:p-10 grow    min-h-full ">
+              {/* Heading and tagline let taps through to the owl sitting on a
+                  cloud behind them (it only sits between the letters). */}
               <h1
                 data-owl-avoid="text"
-                className="text-9xl font-primary font-extrabold text-navy max-w-6xl relative z-20"
+                className="text-9xl font-primary font-extrabold text-navy max-w-6xl relative z-20 pointer-events-none"
               >
                 {tMeta('title')}
               </h1>
-              <p data-owl-avoid="text" className="text-3xl font-secondary text-navy max-w-2xl z-20">
+              <p
+                data-owl-avoid="text"
+                className="text-3xl font-secondary text-navy max-w-2xl z-20 pointer-events-none"
+              >
                 {t('tagline')}
               </p>
 

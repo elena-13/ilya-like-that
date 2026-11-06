@@ -7,14 +7,16 @@ import { useTranslations } from 'next-intl';
 import { OWL_SPOT } from '../config';
 import { useBirthdayInvite } from '../BirthdayInviteProvider';
 import { blinkOwl, flickEar, injectOwlSvg } from '../owlSvg';
-import { findOwlSeat, SHOWN, type Seat } from '../owlSeat';
+import { CLOUD_SRC, findOwlSeat, SHOWN, type Seat } from '../owlSeat';
 
 // After the invite is closed, the owl settles on a hero cloud and stays:
 // it blinks now and then, sometimes flicks an ear or tilts its head.
 // Clicking it reopens the invite, so guests can find the date again.
 // It's drawn into the cloud's box behind the cloud picture, so the cloud
 // hides its feet and it drifts along with the cloud. findOwlSeat picks the
-// cloud and the spot, clear of the title and buttons at any screen size.
+// cloud and the spot, clear of the title and buttons at any screen size; on
+// narrow phones, where the big clouds have no room, the owl gets its own
+// small cloud in a clear corner of the hero card.
 
 const sitting = `translate(-50%, ${-SHOWN * 100}%)`;
 
@@ -25,7 +27,7 @@ const rand = (min: number, max: number) => min + Math.random() * (max - min);
 function fallbackSeat(): Seat | null {
   const container = document.querySelector<HTMLElement>('[data-cloud-slot="right"]');
   return container
-    ? { side: 'right', container, x: OWL_SPOT.x, edge: OWL_SPOT.edge, width: OWL_SPOT.width }
+    ? { kind: 'cloud', container, x: OWL_SPOT.x, edge: OWL_SPOT.edge, width: OWL_SPOT.width }
     : null;
 }
 
@@ -37,6 +39,7 @@ export function OwlRest() {
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const owlRef = useRef<HTMLSpanElement>(null);
+  const perchRef = useRef<HTMLDivElement>(null);
   const busy = useRef(false);
 
   // Pick a seat, and pick again when the layout changes.
@@ -86,6 +89,23 @@ export function OwlRest() {
     const run = async () => {
       await Promise.all([injectOwlSvg(owl), wait(reduceMotion ? 0 : 900)]);
       if (cancelled) return;
+      const perch = perchRef.current;
+      if (perch) {
+        perch.style.visibility = 'visible';
+        // Its own little cloud puffs in first.
+        if (!reduceMotion) {
+          await track(
+            perch.animate(
+              [
+                { opacity: 0, transform: 'scale(0.7)' },
+                { opacity: 1, transform: 'scale(1)' },
+              ],
+              { duration: 450, easing: 'cubic-bezier(.2,.9,.3,1.2)' },
+            ),
+          );
+          if (cancelled) return;
+        }
+      }
       button.style.visibility = 'visible';
 
       if (!reduceMotion) {
@@ -161,7 +181,8 @@ export function OwlRest() {
     reopen();
   };
 
-  return createPortal(
+  const spot = seat.kind === 'cloud' ? seat : seat.owl;
+  const owlButton = (
     <button
       ref={buttonRef}
       type="button"
@@ -172,9 +193,9 @@ export function OwlRest() {
       // cloud covers its feet.
       className="group/owl pointer-events-auto absolute -z-10 cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow"
       style={{
-        left: `${seat.x * 100}%`,
-        top: `${seat.edge * 100}%`,
-        width: `${seat.width * 100}%`,
+        left: `${spot.x * 100}%`,
+        top: `${spot.edge * 100}%`,
+        width: `${spot.width * 100}%`,
         transform: sitting,
         visibility: 'hidden',
       }}
@@ -183,7 +204,30 @@ export function OwlRest() {
       <span className="block origin-[50%_90%] transition-transform duration-300 group-hover/owl:-rotate-6 group-hover/owl:scale-105">
         <span ref={owlRef} className="block origin-[50%_90%]" />
       </span>
-    </button>,
+    </button>
+  );
+
+  return createPortal(
+    seat.kind === 'cloud' ? (
+      owlButton
+    ) : (
+      <div
+        ref={perchRef}
+        className="pointer-events-none absolute isolate z-20 origin-bottom"
+        style={{
+          left: `${seat.box.left * 100}%`,
+          top: `${seat.box.top * 100}%`,
+          width: `${seat.box.width * 100}%`,
+          visibility: 'hidden',
+        }}
+      >
+        <div className="motion-safe:animate-[owl-hover_5s_ease-in-out_infinite]">
+          {owlButton}
+          {/* eslint-disable-next-line @next/next/no-img-element -- small copy of the hero cloud, already loaded */}
+          <img src={CLOUD_SRC} alt="" draggable={false} className="relative block w-full" />
+        </div>
+      </div>
+    ),
     seat.container,
   );
 }
