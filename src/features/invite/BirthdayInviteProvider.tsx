@@ -22,8 +22,9 @@ import { InviteOverlay } from './components/InviteOverlay';
 //              invite, so guests can check the date again.
 // Only guests who opened the secret share link get it (`invited`, checked on
 // the server from the cookie the link sets, see inviteAccess.ts), whether or
-// not they ever sign in. Everyone else sees none of it (no peeking, invite or
-// resting owl). In development, `?invite` in the URL replays it for an invited
+// not they ever sign in. Signed-in users without the link skip the show but
+// still get the resting owl (phase 'rest' from the start), which opens the
+// invite when clicked. Everyone else sees none of it. In development, `?invite` in the URL replays it for an invited
 // guest who has already seen it.
 
 type Phase = 'off' | 'peek' | 'flight' | 'rest';
@@ -71,17 +72,19 @@ const writeSeen = (key: string) => {
 type BirthdayInviteProviderProps = {
   /** This visitor opened the share link (see inviteAccess.ts). */
   invited: boolean;
+  /** Signed in: gets the resting owl even without the share link. */
+  signedIn?: boolean;
   children: ReactNode;
 };
 
-export function BirthdayInviteProvider({ invited, children }: BirthdayInviteProviderProps) {
+export function BirthdayInviteProvider({ invited, signedIn = false, children }: BirthdayInviteProviderProps) {
   const [phase, setPhase] = useState<Phase>('off');
   const [peekStep, setPeekStep] = useState(0);
   const [takeoff, setTakeoff] = useState<DOMRect | null>(null);
 
   useEffect(() => {
     if (!invited) {
-      setPhase('off');
+      setPhase(signedIn ? 'rest' : 'off');
       return;
     }
 
@@ -97,7 +100,7 @@ export function BirthdayInviteProvider({ invited, children }: BirthdayInviteProv
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setPeekStep(0);
     setPhase(reduceMotion ? 'flight' : 'peek');
-  }, [invited]);
+  }, [invited, signedIn]);
 
   const peekDone = useCallback(() => setPeekStep((step) => step + 1), []);
 
