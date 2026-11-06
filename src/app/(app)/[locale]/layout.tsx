@@ -4,7 +4,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import AuthClientProvider from '@/components/auth/AuthClientProvider';
-import { StarShowerHost } from '@/features/wishlist/components/StarShowerHost';
+import { ConfettiHost } from '@/features/wishlist/components/ConfettiHost';
 import { routing } from '@/i18n/routing';
 
 import '../globals.css';
@@ -37,7 +37,7 @@ export default async function RootLayout({
           <AuthClientProvider>
             {children}
           </AuthClientProvider>
-          <StarShowerHost />
+          <ConfettiHost />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, type MouseEvent } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
@@ -8,7 +8,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { bookGift } from '../actions/bookGift';
 import type { BookingErrorCode } from '../actions/errors';
-import { announceGiftBooked } from '../utils/giftBookedEvent';
+import {
+  announceGiftBooked,
+  announceGiftBookingFailed,
+  getBurstOrigin,
+} from '../utils/giftBookedEvent';
 import { HandGiftIcon } from './HandIcons';
 import { stickerIconButtonClass, stickerInk, type StickerLook } from './Sticker';
 
@@ -29,7 +33,7 @@ export function BookButton({ id, version, sticker }: BookButtonProps) {
 
   const currentUserEmail = session?.user?.email;
 
-  const handleBook = () => {
+  const handleBook = (event: MouseEvent<HTMLButtonElement>) => {
     // Guests have to sign in before booking; send them to Google and bring them back here.
     if (!currentUserEmail) {
       signIn('google', { callbackUrl: window.location.href });
@@ -37,18 +41,18 @@ export function BookButton({ id, version, sticker }: BookButtonProps) {
     }
 
     setError(null);
+    // Celebrate right away instead of after the server round-trip.
+    announceGiftBooked(getBurstOrigin(event.currentTarget));
 
     startTransition(async () => {
       // The server action uses the version for an optimistic concurrency check.
       const result = await bookGift(id, version);
 
       if (!result.success) {
+        announceGiftBookingFailed();
         setError(result.error);
-        return;
       }
-
-      // The action revalidates the page, which re-renders this item as booked.
-      announceGiftBooked();
+      // On success the action revalidates the page, which re-renders this item as booked.
     });
   };
 
