@@ -1,13 +1,28 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ExternalLink } from 'lucide-react';
 
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { paths } from '@/lib/paths';
+import { HandExternalLinkIcon, HandGiftIcon } from './HandIcons';
+import {
+  DEFAULT_STICKER,
+  getStickerLook,
+  stickerInk,
+  stickerPillClass,
+  stickerPillIconClass,
+} from './Sticker';
 import { UnbookButton } from './UnbookButton';
+import { formatBrand } from '../utils/formatBrand';
 import { getItemImage } from '../utils/getItemImage';
 import { getItemUrl } from '../utils/getItemUrl';
+
+// White card with a soft shadow, like the wishlist cards.
+const softCardClass = cn(
+  'rounded-4xl bg-white',
+  'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_8px_20px_-8px_rgba(0,0,0,0.15)]',
+);
 
 type MyGiftsListProps = {
   items: WishlistItem[];
@@ -16,18 +31,28 @@ type MyGiftsListProps = {
 export default function MyGiftsList({ items }: MyGiftsListProps) {
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-gray-300 p-10 text-center bg-white/50">
-        <h2 className="text-lg font-semibold text-gray-900">You haven&apos;t booked any gifts yet</h2>
-        <p className="mt-1 text-gray-500">Pick something from the wishlist and it will show up here.</p>
-        <Button asChild className="mt-6 bg-navy text-white cursor-pointer">
-          <Link href={paths.home()}>Browse the wishlist</Link>
+      <div className={cn(softCardClass, 'flex flex-col items-center gap-2 p-10 text-center')}>
+        <span style={{ color: DEFAULT_STICKER.ink }}>
+          <HandGiftIcon className="size-14" sticker={DEFAULT_STICKER.paper} />
+        </span>
+        <h2 className="mt-2 font-secondary text-xl text-navy">
+          You haven&apos;t booked any gifts yet
+        </h2>
+        <p className="text-navy/60">Pick something from the wishlist and it will show up here.</p>
+        <Button asChild variant="outline" className={cn(stickerPillClass, 'mt-5')}>
+          <Link href={paths.home()}>
+            <span className={stickerPillIconClass} style={{ color: DEFAULT_STICKER.ink }}>
+              <HandGiftIcon className="size-8" sticker={DEFAULT_STICKER.paper} />
+            </span>
+            Browse the wishlist
+          </Link>
         </Button>
       </div>
     );
   }
 
   return (
-    <ul className="flex flex-col gap-4">
+    <ul className="flex flex-col gap-6">
       {items.map((item) => (
         <MyGiftRow key={item.id} item={item} />
       ))}
@@ -38,43 +63,54 @@ export default function MyGiftsList({ items }: MyGiftsListProps) {
 function MyGiftRow({ item }: { item: WishlistItem }) {
   const image = getItemImage(item);
   const itemUrl = getItemUrl(item);
+  // Same sticker colours as this gift's icons on the list.
+  const linkSticker = getStickerLook(`${item.id}-link`);
+  const bookSticker = getStickerLook(`${item.id}-book`);
 
   return (
-    <li className="flex items-center gap-4 rounded-3xl bg-white p-3 ring-1 ring-black/5 shadow-sm">
-      <Link href={itemUrl} className="shrink-0 overflow-hidden rounded-2xl">
+    <li className={cn(softCardClass, 'flex flex-wrap items-center gap-4 p-3 pr-4 sm:flex-nowrap')}>
+      <Link href={itemUrl} className="shrink-0 overflow-hidden rounded-3xl bg-white">
         <Image
           src={image.src}
           alt={image.alt}
           width={image.width}
           height={image.height}
           sizes="96px"
-          className="h-20 w-20 object-cover sm:h-24 sm:w-24"
+          className="h-20 w-20 object-contain p-1.5 sm:h-24 sm:w-24"
         />
       </Link>
 
-      <div className="min-w-0 grow">
-        {item.brand && <p className="font-secondary text-xs text-navy/60">{item.brand}</p>}
-        <h2 className="text-navy font-bold leading-snug line-clamp-2">
+      <div className="min-w-0 flex-1">
+        {item.brand && (
+          <p className="font-secondary text-xs text-navy/60">{formatBrand(item.brand)}</p>
+        )}
+        <h2 className="font-secondary text-lg leading-snug text-navy line-clamp-2">
           <Link href={itemUrl} className="hover:underline">
             {item.title}
           </Link>
         </h2>
       </div>
 
-      <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center">
+      <div className="flex w-full shrink-0 items-center justify-end gap-1 sm:w-auto">
         {item.shopLink && (
-          <Button asChild variant="secondary" size="sm" className="cursor-pointer">
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="relative size-10 cursor-pointer bg-transparent hover:rotate-6 hover:scale-110 hover:bg-transparent dark:hover:bg-transparent"
+            style={stickerInk(linkSticker)}
+          >
             <a
               href={item.shopLink}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Open external link"
             >
-              <ExternalLink className="h-4 w-4" />
+              <HandExternalLinkIcon className="size-10" sticker={linkSticker.paper} />
             </a>
           </Button>
         )}
-        <UnbookButton id={String(item.id)} />
+        <UnbookButton id={String(item.id)} sticker={bookSticker} compact />
       </div>
     </li>
   );
