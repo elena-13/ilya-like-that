@@ -22,7 +22,9 @@ import { InviteOverlay } from './components/InviteOverlay';
 //   'rest'   – once the invite is closed (or was seen on an earlier visit),
 //              the owl sits on a cloud (OwlRest); clicking it reopens the
 //              invite, so guests can check the date again.
-// In development, `?invite` in the URL starts it even when signed out.
+// Signed-out visitors see none of it (no peeking, invite or resting owl).
+// In development, `?invite` in the URL replays it for a signed-in user who
+// has already seen it.
 
 type Phase = 'off' | 'peek' | 'flight' | 'rest';
 
@@ -76,11 +78,16 @@ export function BirthdayInviteProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (status === 'loading') return;
 
-    const forced =
+    // Signed-in guests only; signing out hides it straight away.
+    if (!userId) {
+      setPhase('off');
+      return;
+    }
+
+    const replay =
       process.env.NODE_ENV === 'development' &&
       new URLSearchParams(window.location.search).has('invite');
-    if (!userId && !forced) return;
-    const due = forced || INVITE_SHOW_EVERY_TIME || (!!userId && !readSeen(inviteSeenKey(userId)));
+    const due = replay || INVITE_SHOW_EVERY_TIME || !readSeen(inviteSeenKey(userId));
     if (!due) {
       setPhase('rest');
       return;
@@ -99,7 +106,11 @@ export function BirthdayInviteProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const close = useCallback(() => {
-    if (userId) writeSeen(inviteSeenKey(userId));
+    if (!userId) {
+      setPhase('off');
+      return;
+    }
+    writeSeen(inviteSeenKey(userId));
     setPhase('rest');
   }, [userId]);
 
