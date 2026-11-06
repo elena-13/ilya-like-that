@@ -6,19 +6,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import type { WishlistItem } from '@/payload-types';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { BookButton } from './BookButton';
-import { PrivateBadge } from './PrivateBadge';
 import { BookedLabel } from './BookedLabel';
 import { CardTape } from './CardTape';
+import { PrivateBadge } from './PrivateBadge';
+import { ShopLinkButton } from './ShopLinkButton';
+import { getItemStickers } from './Sticker';
 import { UnbookButton } from './UnbookButton';
-import { HandExternalLinkIcon } from './HandIcons';
-import { getStickerLook, stickerInk } from './Sticker';
+import { cardShadowClass } from '../styles';
+import { formatBrand } from '../utils/formatBrand';
+import { getCardLook } from '../utils/getCardLook';
 import { getItemImage } from '../utils/getItemImage';
 import { getItemUrl } from '../utils/getItemUrl';
-import { getCardLook } from '../utils/getCardLook';
-import { formatBrand } from '../utils/formatBrand';
-import { cn } from '@/lib/utils';
 
 type WishlistItemCardProps = {
   item: WishlistItem;
@@ -29,50 +29,17 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const image = getItemImage(item);
   const itemUrl = getItemUrl(item);
   const look = getCardLook(item.id);
-  const linkSticker = getStickerLook(`${item.id}-link`);
-  const bookSticker = getStickerLook(`${item.id}-book`);
-
-  const currentUserEmail = session?.user?.email;
-  const isBookedByCurrentUser =
-    item.status === 'booked' && Boolean(currentUserEmail) && item.bookedBy === currentUserEmail;
-
-  const bookButton = (
-    <BookButton
-      id={String(item.id)}
-      version={item.version || 1}
-      status={item.status}
-      bookedBy={item.bookedBy}
-      sticker={bookSticker}
-    />
-  );
-
-  const shopLinkButton = item.shopLink && (
-    <Button
-      asChild
-      variant="ghost"
-      size="icon"
-      className="relative size-10 cursor-pointer bg-transparent hover:bg-transparent dark:hover:bg-transparent hover:rotate-6 hover:scale-110"
-      style={stickerInk(linkSticker)}
-    >
-      <a
-        href={item.shopLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Open external link"
-      >
-        <HandExternalLinkIcon className="size-10" sticker={linkSticker.paper} />
-      </a>
-    </Button>
-  );
+  const stickers = getItemStickers(item.id);
 
   const isBooked = item.status === 'booked';
+  const isBookedByCurrentUser =
+    isBooked && Boolean(session?.user?.email) && item.bookedBy === session?.user?.email;
 
   return (
     <article
       className={cn(
-        'group/card @container relative mb-10 mt-4 inline-block w-full rounded-4xl p-3 pb-4',
-        'bg-white',
-        'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_8px_20px_-8px_rgba(0,0,0,0.15)]',
+        'group/card @container relative mb-10 mt-4 inline-block w-full rounded-4xl bg-white p-3 pb-4',
+        cardShadowClass,
         'transition-transform duration-300 hover:rotate-0 hover:-translate-y-1',
         look.tilt,
       )}
@@ -114,19 +81,19 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
             {isBookedByCurrentUser ? (
               <>
                 <span className="[@media(hover:hover)]:hidden">
-                  <BookedLabel mine sticker={bookSticker} />
+                  <BookedLabel mine sticker={stickers.book} />
                 </span>
                 <div className="pointer-events-auto">
                   <UnbookButton
                     id={String(item.id)}
-                    sticker={bookSticker}
+                    sticker={stickers.book}
                     compact
                     restingLabel="your gift"
                   />
                 </div>
               </>
             ) : (
-              <BookedLabel mine={false} sticker={bookSticker} />
+              <BookedLabel mine={false} sticker={stickers.book} />
             )}
           </div>
         )}
@@ -149,10 +116,16 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
 
         {/* Icons sit at the bottom of the card, next to the title. On desktop
             they appear on hover (or keyboard focus); phones always show them. */}
-        {item.status === 'available' && (
+        {!isBooked && (
           <div className="-mr-1 -mb-1 flex shrink-0 items-center transition-opacity duration-300 md:opacity-0 md:group-hover/card:opacity-100 md:focus-within:opacity-100">
-            {shopLinkButton}
-            <div>{bookButton}</div>
+            {item.shopLink && <ShopLinkButton href={item.shopLink} sticker={stickers.link} />}
+            <div>
+              <BookButton
+                id={String(item.id)}
+                version={item.version || 1}
+                sticker={stickers.book}
+              />
+            </div>
           </div>
         )}
       </div>

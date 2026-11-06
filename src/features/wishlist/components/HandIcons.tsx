@@ -3,16 +3,13 @@ import type { SVGProps } from 'react';
 // Hand-drawn style icons: slightly wobbly marker strokes that match the
 // handwritten card font. They inherit color from `currentColor`.
 
-type IconProps = SVGProps<SVGSVGElement> & {
+export type HandIconProps = SVGProps<SVGSVGElement> & {
   // Sticker colour: draws a thick rounded outline that follows the icon's
   // shape behind it, like a die-cut sticker.
   sticker?: string;
 };
 
-// Red ink used for the hand-drawn card buttons.
-export const handInk = 'text-[#b83c2b]';
-
-function HandIcon({ children, sticker, ...props }: IconProps) {
+function HandIcon({ children, sticker, ...props }: HandIconProps) {
   return (
     <svg
       // A sticker widens the canvas so the drawing sits smaller inside
@@ -30,11 +27,7 @@ function HandIcon({ children, sticker, ...props }: IconProps) {
       {sticker && (
         // The same drawing again, filled and stroked very thick: it spreads
         // into a soft blob around the icon. CSS overrides each path's own width.
-        <g
-          stroke={sticker}
-          fill={sticker}
-          className="[&_path]:[stroke-width:13px]"
-        >
+        <g stroke={sticker} fill={sticker} className="[&_path]:[stroke-width:13px]">
           {children}
         </g>
       )}
@@ -43,7 +36,7 @@ function HandIcon({ children, sticker, ...props }: IconProps) {
   );
 }
 
-export function HandGiftIcon(props: IconProps) {
+export function HandGiftIcon(props: HandIconProps) {
   // Same drawing as public/icons/gift.svg
   return (
     <HandIcon strokeWidth={1.3} {...props}>
@@ -61,7 +54,7 @@ export function HandGiftIcon(props: IconProps) {
   );
 }
 
-export function HandCrossIcon(props: IconProps) {
+export function HandCrossIcon(props: HandIconProps) {
   return (
     <HandIcon {...props}>
       <path d="M6.2 5.8C10 10 14 14.5 18.1 18.4" />
@@ -70,7 +63,7 @@ export function HandCrossIcon(props: IconProps) {
   );
 }
 
-export function HandExternalLinkIcon(props: IconProps) {
+export function HandExternalLinkIcon(props: HandIconProps) {
   // Same drawing as public/icons/link.svg
   return (
     <HandIcon strokeWidth={2} {...props}>
@@ -83,7 +76,7 @@ export function HandExternalLinkIcon(props: IconProps) {
   );
 }
 
-export function HandLoginIcon(props: IconProps) {
+export function HandLoginIcon(props: HandIconProps) {
   return (
     <HandIcon strokeWidth={2} {...props}>
       {/* door frame */}

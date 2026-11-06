@@ -14,13 +14,14 @@ import { Button } from '@/components/ui/button';
 import { CardTape } from '@/features/wishlist/components/CardTape';
 import { HandExternalLinkIcon } from '@/features/wishlist/components/HandIcons';
 import {
-  getStickerLook,
+  getItemStickers,
   stickerPillClass,
-  stickerPillIconClass,
+  PillIcon,
 } from '@/features/wishlist/components/Sticker';
 import { getCardLook } from '@/features/wishlist/utils/getCardLook';
 import { formatBrand } from '@/features/wishlist/utils/formatBrand';
 import { cn } from '@/lib/utils';
+import { softCardClass } from '@/features/wishlist/styles';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -70,21 +71,14 @@ export default async function ItemPage({ params }: Props) {
   const image = getItemImage(item);
   // Same tape, tilt and sticker colours as this gift's card on the list.
   const look = getCardLook(item.id);
-  const linkSticker = getStickerLook(`${item.id}-link`);
-  const bookSticker = getStickerLook(`${item.id}-book`);
+  const stickers = getItemStickers(item.id);
 
   return (
     <>
       <PageHeader />
       <main className="mx-auto grid max-w-5xl gap-10 px-4 py-10 md:grid-cols-2 md:py-14">
         {/* Item photo, as a taped card like on the list */}
-        <div
-          className={cn(
-            '@container relative self-start rounded-4xl bg-white p-4',
-            'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_8px_20px_-8px_rgba(0,0,0,0.15)]',
-            look.tilt,
-          )}
-        >
+        <div className={cn('@container relative self-start p-4', softCardClass, look.tilt)}>
           <CardTape look={look} />
           <div className="overflow-hidden rounded-3xl bg-white">
             <Image
@@ -116,14 +110,12 @@ export default async function ItemPage({ params }: Props) {
             version={item.version || 1}
             status={item.status}
             bookedBy={item.bookedBy}
-            sticker={bookSticker}
+            sticker={stickers.book}
             actions={
               item.shopLink && (
                 <Button asChild variant="outline" className={stickerPillClass}>
                   <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
-                    <span className={stickerPillIconClass} style={{ color: linkSticker.ink }}>
-                      <HandExternalLinkIcon className="size-8" sticker={linkSticker.paper} />
-                    </span>
+                    <PillIcon icon={HandExternalLinkIcon} sticker={stickers.link} />
                     View product
                   </a>
                 </Button>

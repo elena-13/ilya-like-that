@@ -4,11 +4,12 @@ import { signIn } from 'next-auth/react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { softCardClass } from '@/features/wishlist/styles';
 import { HandLoginIcon } from '@/features/wishlist/components/HandIcons';
 import {
   DEFAULT_STICKER,
   stickerPillClass,
-  stickerPillIconClass,
+  PillIcon,
 } from '@/features/wishlist/components/Sticker';
 
 type SignInPromptProps = {
@@ -20,21 +21,14 @@ type SignInPromptProps = {
 // A white card with the message and the outlined Log in pill.
 export function SignInPrompt({ message, callbackUrl }: SignInPromptProps) {
   return (
-    <div
-      className={cn(
-        'flex flex-col items-center gap-5 rounded-4xl bg-white p-10 text-center',
-        'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_8px_20px_-8px_rgba(0,0,0,0.15)]',
-      )}
-    >
+    <div className={cn('flex flex-col items-center gap-5 p-10 text-center', softCardClass)}>
       <p className="font-secondary text-lg text-navy">{message}</p>
       <Button
         variant="outline"
         className={stickerPillClass}
         onClick={() => signIn('google', { callbackUrl: callbackUrl ?? window.location.href })}
       >
-        <span className={stickerPillIconClass} style={{ color: DEFAULT_STICKER.ink }}>
-          <HandLoginIcon className="size-8" sticker={DEFAULT_STICKER.paper} />
-        </span>
+        <PillIcon icon={HandLoginIcon} sticker={DEFAULT_STICKER} />
         Log in with Google
       </Button>
     </div>

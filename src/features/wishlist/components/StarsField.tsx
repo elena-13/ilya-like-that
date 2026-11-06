@@ -8,15 +8,14 @@ type LayerCfg = {
   sizeMax: number;
   duration: number;
   delayBase: number;
-  blur: number;
   // Crossed light rays through the star (only on the bigger ones).
   rays: boolean;
 };
 
 const LAYERS: LayerCfg[] = [
-  { count: 26, sizeMin: 1, sizeMax: 2, duration: 3, delayBase: 0.0, blur: 0, rays: false },
-  { count: 18, sizeMin: 1.5, sizeMax: 2.5, duration: 4, delayBase: 0.6, blur: 0, rays: false },
-  { count: 10, sizeMin: 2, sizeMax: 3, duration: 6, delayBase: 1.2, blur: 0, rays: true },
+  { count: 26, sizeMin: 1, sizeMax: 2, duration: 3, delayBase: 0.0, rays: false },
+  { count: 18, sizeMin: 1.5, sizeMax: 2.5, duration: 4, delayBase: 0.6, rays: false },
+  { count: 10, sizeMin: 2, sizeMax: 3, duration: 6, delayBase: 1.2, rays: true },
 ];
 
 function makeRng(seed: number) {
@@ -63,7 +62,6 @@ export function StarsField({ seed = 12345 }: { seed?: number }) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 ['--twinkle-d' as any]: `${s.layer.duration}s`,
                 animationDelay: `${s.delay}s`,
-                filter: `blur(${s.layer.blur}px)`,
               }}
             />
           ))}

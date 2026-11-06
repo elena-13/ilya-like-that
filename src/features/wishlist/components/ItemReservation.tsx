@@ -6,13 +6,9 @@ import { signIn, useSession } from 'next-auth/react';
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { cardShadowClass } from '../styles';
 import { HandCrossIcon, HandGiftIcon } from './HandIcons';
-import {
-  DEFAULT_STICKER,
-  stickerPillClass,
-  stickerPillIconClass,
-  type StickerLook,
-} from './Sticker';
+import { DEFAULT_STICKER, stickerPillClass, PillIcon, type StickerLook } from './Sticker';
 import { bookGift } from '../actions/bookGift';
 import { unbookGift } from '../actions/unbookGift';
 import { announceGiftBooked } from '../utils/giftBookedEvent';
@@ -87,10 +83,7 @@ export default function ItemReservation({
     <div className="space-y-8">
       {/* Status block: a small white card with the gift sticker */}
       <div
-        className={cn(
-          'flex items-center gap-3 rounded-3xl bg-white p-4',
-          'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_8px_20px_-8px_rgba(0,0,0,0.15)]',
-        )}
+        className={cn('flex items-center gap-3 rounded-3xl bg-white p-4', cardShadowClass)}
         aria-label={isBooked ? 'Reserved' : 'Available'}
       >
         <span className="shrink-0">{giftSticker}</span>
@@ -117,9 +110,7 @@ export default function ItemReservation({
             variant="outline"
             className={stickerPillClass}
           >
-            <span className={stickerPillIconClass} style={{ color: sticker.ink }}>
-              <HandGiftIcon className="size-8" sticker={sticker.paper} />
-            </span>
+            <PillIcon icon={HandGiftIcon} sticker={sticker} />
             {isPending ? 'Booking…' : 'Book'}
           </Button>
         )}
@@ -131,9 +122,7 @@ export default function ItemReservation({
             variant="outline"
             className={stickerPillClass}
           >
-            <span className={stickerPillIconClass} style={{ color: sticker.ink }}>
-              <HandCrossIcon className="size-8" sticker={sticker.paper} />
-            </span>
+            <PillIcon icon={HandCrossIcon} sticker={sticker} />
             {isPending ? 'Cancelling…' : 'Cancel booking'}
           </Button>
         )}

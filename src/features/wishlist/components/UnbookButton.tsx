@@ -2,12 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { HandCrossIcon, HandGiftIcon } from './HandIcons';
-import {
-  DEFAULT_STICKER,
-  stickerPillClass,
-  stickerPillIconClass,
-  type StickerLook,
-} from './Sticker';
+import { DEFAULT_STICKER, stickerPillClass, PillIcon, type StickerLook } from './Sticker';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -81,9 +76,7 @@ export function UnbookButton({
             restingLabel && !isPending && actionClass,
           )}
         >
-          <span className={stickerPillIconClass} style={{ color: sticker.ink }}>
-            <HandCrossIcon className={iconSize} sticker={sticker.paper} />
-          </span>
+          <PillIcon icon={HandCrossIcon} sticker={sticker} className={iconSize} />
           {isPending ? 'Cancelling…' : 'Cancel booking'}
         </span>
       </Button>

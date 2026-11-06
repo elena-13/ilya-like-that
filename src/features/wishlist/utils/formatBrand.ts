@@ -4,5 +4,8 @@ export function formatBrand(brand: string) {
   return brand
     .trim()
     .toLowerCase()
-    .replace(/(^|[\s\-&/])(\p{L})/gu, (_, sep: string, letter: string) => sep + letter.toUpperCase());
+    .replace(
+      /(^|[\s\-&/])(\p{L})/gu,
+      (_, sep: string, letter: string) => sep + letter.toUpperCase(),
+    );
 }

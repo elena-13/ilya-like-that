@@ -1,4 +1,7 @@
-import type { CSSProperties } from 'react';
+import type { ComponentType, CSSProperties } from 'react';
+
+import { cn } from '@/lib/utils';
+import type { HandIconProps } from './HandIcons';
 
 import { hash } from '../utils/getCardLook';
 
@@ -27,6 +30,15 @@ export function getStickerLook(seed: string): StickerLook {
   return PALETTE[hash(seed) % PALETTE.length];
 }
 
+// The two stickers a gift uses everywhere (card, item page, My gifts), so
+// its link and gift icons keep the same colours on every page.
+export function getItemStickers(id: string | number) {
+  return {
+    link: getStickerLook(`${id}-link`),
+    book: getStickerLook(`${id}-book`),
+  };
+}
+
 // Colours the button's icon with the sticker ink.
 export function stickerInk(look: StickerLook): CSSProperties {
   return { color: look.ink };
@@ -46,5 +58,29 @@ export const stickerPillClass = `
 `;
 
 // Wrapper for the icon inside a sticker pill: ink colour + hover wiggle.
-export const stickerPillIconClass =
+const stickerPillIconClass =
   'transition-transform duration-300 group-hover/pill:scale-110 group-hover/pill:rotate-6';
+
+// Icon inside a sticker pill, in the sticker's colours.
+export function PillIcon({
+  icon: Icon,
+  sticker,
+  className = 'size-8',
+}: {
+  icon: ComponentType<HandIconProps>;
+  sticker: StickerLook;
+  className?: string;
+}) {
+  return (
+    <span className={stickerPillIconClass} style={stickerInk(sticker)}>
+      <Icon className={className} sticker={sticker.paper} />
+    </span>
+  );
+}
+
+// Icon-only sticker button (Book, shop link on cards): no fill, the
+// sticker grows and turns a little on hover.
+export const stickerIconButtonClass = cn(
+  'relative size-10 cursor-pointer bg-transparent hover:scale-110 hover:bg-transparent',
+  'dark:hover:bg-transparent',
+);

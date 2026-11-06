@@ -5,24 +5,14 @@ import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { paths } from '@/lib/paths';
-import { HandExternalLinkIcon, HandGiftIcon } from './HandIcons';
-import {
-  DEFAULT_STICKER,
-  getStickerLook,
-  stickerInk,
-  stickerPillClass,
-  stickerPillIconClass,
-} from './Sticker';
+import { HandGiftIcon } from './HandIcons';
+import { DEFAULT_STICKER, getItemStickers, PillIcon, stickerPillClass } from './Sticker';
+import { ShopLinkButton } from './ShopLinkButton';
 import { UnbookButton } from './UnbookButton';
+import { softCardClass } from '../styles';
 import { formatBrand } from '../utils/formatBrand';
 import { getItemImage } from '../utils/getItemImage';
 import { getItemUrl } from '../utils/getItemUrl';
-
-// White card with a soft shadow, like the wishlist cards.
-const softCardClass = cn(
-  'rounded-4xl bg-white',
-  'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_8px_20px_-8px_rgba(0,0,0,0.15)]',
-);
 
 type MyGiftsListProps = {
   items: WishlistItem[];
@@ -41,9 +31,7 @@ export default function MyGiftsList({ items }: MyGiftsListProps) {
         <p className="text-navy/60">Pick something from the wishlist and it will show up here.</p>
         <Button asChild variant="outline" className={cn(stickerPillClass, 'mt-5')}>
           <Link href={paths.home()}>
-            <span className={stickerPillIconClass} style={{ color: DEFAULT_STICKER.ink }}>
-              <HandGiftIcon className="size-8" sticker={DEFAULT_STICKER.paper} />
-            </span>
+            <PillIcon icon={HandGiftIcon} sticker={DEFAULT_STICKER} />
             Browse the wishlist
           </Link>
         </Button>
@@ -64,8 +52,7 @@ function MyGiftRow({ item }: { item: WishlistItem }) {
   const image = getItemImage(item);
   const itemUrl = getItemUrl(item);
   // Same sticker colours as this gift's icons on the list.
-  const linkSticker = getStickerLook(`${item.id}-link`);
-  const bookSticker = getStickerLook(`${item.id}-book`);
+  const stickers = getItemStickers(item.id);
 
   return (
     <li className={cn(softCardClass, 'flex flex-wrap items-center gap-4 p-3 pr-4 sm:flex-nowrap')}>
@@ -92,25 +79,8 @@ function MyGiftRow({ item }: { item: WishlistItem }) {
       </div>
 
       <div className="flex w-full shrink-0 items-center justify-end gap-1 sm:w-auto">
-        {item.shopLink && (
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className="relative size-10 cursor-pointer bg-transparent hover:rotate-6 hover:scale-110 hover:bg-transparent dark:hover:bg-transparent"
-            style={stickerInk(linkSticker)}
-          >
-            <a
-              href={item.shopLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open external link"
-            >
-              <HandExternalLinkIcon className="size-10" sticker={linkSticker.paper} />
-            </a>
-          </Button>
-        )}
-        <UnbookButton id={String(item.id)} sticker={bookSticker} compact />
+        {item.shopLink && <ShopLinkButton href={item.shopLink} sticker={stickers.link} />}
+        <UnbookButton id={String(item.id)} sticker={stickers.book} compact />
       </div>
     </li>
   );

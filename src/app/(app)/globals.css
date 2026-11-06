@@ -202,42 +202,6 @@
     }
   }
 
-  /* Gentle rocking + slight horizontal drift */
-  @keyframes cloud-float-1 {
-    0% {
-      transform: translate3d(-1%, 0, 0) rotate(0deg);
-    }
-    25% {
-      transform: translate3d(0, -6px, 0) rotate(-0.25deg);
-    }
-    50% {
-      transform: translate3d(1%, 0, 0) rotate(0deg);
-    }
-    75% {
-      transform: translate3d(0, 6px, 0) rotate(0.25deg);
-    }
-    100% {
-      transform: translate3d(-1%, 0, 0) rotate(0deg);
-    }
-  }
-
-  @keyframes cloud-float-2 {
-    0% {
-      transform: translate3d(1%, 0, 0) rotate(0deg);
-    }
-    25% {
-      transform: translate3d(0, -8px, 0) rotate(0.35deg);
-    }
-    50% {
-      transform: translate3d(-1%, 0, 0) rotate(0deg);
-    }
-    75% {
-      transform: translate3d(0, 8px, 0) rotate(-0.35deg);
-    }
-    100% {
-      transform: translate3d(1%, 0, 0) rotate(0deg);
-    }
-  }
 }
 
 /* ---------------------------------
