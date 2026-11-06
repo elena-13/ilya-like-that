@@ -35,6 +35,8 @@ export function Confetti({ burst, cancelCount }: ConfettiProps) {
     if (confetti && burst && burst.id !== playedIdRef.current) {
       playedIdRef.current = burst.id;
       confetti.play(burst.origin);
+      // Lets e2e tests see that a burst actually played (the canvas is pre-warmed).
+      if (hostRef.current) hostRef.current.dataset.bursts = String(burst.id);
     }
   }, [confetti, burst]);
 
@@ -42,5 +44,5 @@ export function Confetti({ burst, cancelCount }: ConfettiProps) {
     if (confetti && cancelCount > 0) confetti.cancel();
   }, [confetti, cancelCount]);
 
-  return <div ref={hostRef} aria-hidden className="pointer-events-none fixed inset-0 z-100" />;
+  return <div ref={hostRef} aria-hidden data-testid="confetti" className="pointer-events-none fixed inset-0 z-100" />;
 }

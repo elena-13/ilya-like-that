@@ -25,12 +25,11 @@ test.describe.serial('booking a gift', () => {
     await openGift(page);
 
     await expect(page.getByText('Available', { exact: true })).toBeVisible();
-    const canvasesBefore = await page.locator('canvas').count();
     await page.getByRole('button', { name: 'Book', exact: true }).click();
 
     await expect(page.getByText('Reserved', { exact: true })).toBeVisible();
-    // Booking plays the star shower, which adds a Pixi canvas.
-    await expect(page.locator('canvas')).toHaveCount(canvasesBefore + 1);
+    // Booking plays a confetti burst (Pixi is pre-warmed, so count bursts, not canvases).
+    await expect(page.getByTestId('confetti')).toHaveAttribute('data-bursts', '1');
     await expect(page.getByText('You reserved this gift.')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Cancel booking' })).toBeVisible();
   });
@@ -78,7 +77,6 @@ test.describe('booking from the home page card', () => {
     await page.goto('/');
 
     const card = page.getByRole('article', { name: GIFT_TITLE });
-    const canvasesBefore = await page.locator('canvas').count();
 
     // On desktop the Book button appears when hovering the card.
     await card.hover();
@@ -86,8 +84,8 @@ test.describe('booking from the home page card', () => {
 
     // A booked card is labelled "your gift" for the person who booked it.
     await expect(card.getByText('your gift').filter({ visible: true })).toBeVisible();
-    // Booking from the card plays the star shower, which adds a Pixi canvas.
-    await expect(page.locator('canvas')).toHaveCount(canvasesBefore + 1);
+    // Booking from the card plays a confetti burst.
+    await expect(page.getByTestId('confetti')).toHaveAttribute('data-bursts', '1');
 
     // On desktop Cancel booking appears when hovering the card.
     await card.hover();
