@@ -68,5 +68,18 @@
     "notBooked": "This gift is not booked.",
     "notYours": "You can only cancel your own booking.",
     "cancelFailed": "Something went wrong while cancelling the booking. Please try again."
+  },
+  "invite": {
+    "titleLine1": "You're",
+    "titleLine2": "invited!",
+    "text": "A whole year of smiles already! Come share <b>cake, giggles and the very first candle</b> with us.",
+    "ageBefore": "Ilya's",
+    "ageSuffix": "{age, selectordinal, one {st} two {nd} few {rd} other {th}}",
+    "ageAfter": "birthday",
+    "when": "12th December · 14:00",
+    "where": "Home party · at ours",
+    "signoff": "Ilya can't wait to see you!",
+    "close": "Close",
+    "reopen": "Open the birthday invite"
   }
 }
