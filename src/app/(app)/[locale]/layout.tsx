@@ -30,8 +30,14 @@ export default async function RootLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
+  // suppressHydrationWarning: browser extensions (e.g. LanguageTool's
+  // data-lt-installed) add attributes to <html> before React hydrates.
   return (
-    <html lang={locale} className={`${neurath.variable} ${facultyGlyphic.variable}`}>
+    <html
+      lang={locale}
+      className={`${neurath.variable} ${facultyGlyphic.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <NextIntlClientProvider>
           <AuthClientProvider>

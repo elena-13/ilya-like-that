@@ -24,7 +24,7 @@ export default async function Home() {
   const tMeta = await getTranslations('metadata');
 
   return (
-    <BirthdayInviteProvider invited={invited}>
+    <BirthdayInviteProvider invited={invited} signedIn={!!user}>
       <main className="min-h-screen">
         <section
           aria-label={t('introLabel')}
