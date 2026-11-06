@@ -1,6 +1,9 @@
 import type { WishlistItem } from '@/payload-types';
 import { paths } from '@/lib/paths';
 
+// Returns a locale-less path; render it with the Link from @/i18n/navigation,
+// which adds the /ua prefix when needed.
+
 // "Dyson V15 Detect!" -> "dyson-v15-detect". Falls back to "gift" for titles
 // without latin letters or digits, so the URL always has a readable part.
 export function slugify(value: string): string {

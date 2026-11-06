@@ -1,18 +1,20 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/navigation';
 import { paths } from '@/lib/paths';
 import { cardShadowClass } from '../styles';
 import { HandCrossIcon, HandGiftIcon } from './HandIcons';
 import { DEFAULT_STICKER, stickerPillClass, PillIcon, type StickerLook } from './Sticker';
 import { bookGift } from '../actions/bookGift';
 import { unbookGift } from '../actions/unbookGift';
+import type { BookingErrorCode } from '../actions/errors';
 import { announceGiftBooked } from '../utils/giftBookedEvent';
 
 type ItemReservationProps = {
@@ -38,7 +40,10 @@ export default function ItemReservation({
 }: ItemReservationProps) {
   const { data: session, status: sessionStatus } = useSession();
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<BookingErrorCode | null>(null);
+  const t = useTranslations('wishlist');
+  const tAuth = useTranslations('auth');
+  const tErrors = useTranslations('errors');
 
   const currentUserEmail = session?.user?.email;
   const isBooked = status === 'booked';
@@ -83,17 +88,17 @@ export default function ItemReservation({
       {/* Status block: a small white card with the gift sticker */}
       <div
         className={cn('flex items-center gap-3 rounded-3xl bg-white p-4', cardShadowClass)}
-        aria-label={isBooked ? 'Reserved' : 'Available'}
+        aria-label={isBooked ? t('reserved') : t('available')}
       >
         <span className="shrink-0">{giftSticker}</span>
         <div>
-          <p className="font-secondary text-lg text-navy">{isBooked ? 'Reserved' : 'Available'}</p>
+          <p className="font-secondary text-lg text-navy">{isBooked ? t('reserved') : t('available')}</p>
           <p className="text-sm text-navy/70">
             {!isBooked
-              ? "This gift hasn't been reserved yet. Book it to let others know it's taken."
+              ? t('statusAvailable')
               : isBookedByCurrentUser
-                ? 'You reserved this gift. No one else can book it while it stays reserved.'
-                : 'Someone has already reserved this gift.'}
+                ? t('statusMine')
+                : t('statusOthers')}
           </p>
         </div>
       </div>
@@ -106,7 +111,7 @@ export default function ItemReservation({
         <Button asChild variant="outline" className={stickerPillClass}>
           <Link href={paths.myGifts()}>
             <PillIcon icon={HandGiftIcon} sticker={DEFAULT_STICKER} />
-            My gifts
+            {tAuth('myGifts')}
           </Link>
         </Button>
 
@@ -118,7 +123,7 @@ export default function ItemReservation({
             className={stickerPillClass}
           >
             <PillIcon icon={HandGiftIcon} sticker={sticker} />
-            {isPending ? 'Booking…' : 'Book'}
+            {isPending ? t('booking') : t('book')}
           </Button>
         )}
 
@@ -130,14 +135,14 @@ export default function ItemReservation({
             className={stickerPillClass}
           >
             <PillIcon icon={HandCrossIcon} sticker={sticker} />
-            {isPending ? 'Cancelling…' : 'Cancel booking'}
+            {isPending ? t('cancelling') : t('cancelBooking')}
           </Button>
         )}
       </div>
 
       {error && (
         <p role="alert" className="text-right text-sm text-red-500">
-          {error}
+          {tErrors(error)}
         </p>
       )}
     </div>

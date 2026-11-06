@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+
 import { HandCrossIcon, HandGiftIcon } from './HandIcons';
 import {
   compactPillClass,
@@ -13,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { unbookGift } from '../actions/unbookGift';
+import type { BookingErrorCode } from '../actions/errors';
 
 type UnbookButtonProps = {
   id: string;
@@ -42,7 +45,9 @@ export function UnbookButton({
   restingLabel,
 }: UnbookButtonProps) {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<BookingErrorCode | null>(null);
+  const t = useTranslations('wishlist');
+  const tErrors = useTranslations('errors');
 
   const handleUnbook = () => {
     setError(null);
@@ -66,7 +71,7 @@ export function UnbookButton({
         disabled={isPending}
         variant="outline"
         className={cn(stickerPillClass, compact && compactPillClass)}
-        aria-label="Cancel booking"
+        aria-label={t('cancelBooking')}
       >
         {restingLabel && !isPending && (
           <span className={cn(restingClass, 'gap-1.5')}>
@@ -83,12 +88,12 @@ export function UnbookButton({
           )}
         >
           <PillIcon icon={HandCrossIcon} sticker={sticker} className={iconSize} />
-          {isPending ? 'Cancelling…' : 'Cancel booking'}
+          {isPending ? t('cancelling') : t('cancelBooking')}
         </span>
       </Button>
       {error && (
         <p role="alert" className="mt-2 text-center text-sm text-red-500">
-          {error}
+          {tErrors(error)}
         </p>
       )}
     </>

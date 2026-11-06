@@ -2,10 +2,12 @@
 
 import { useState, useTransition } from 'react';
 import { signIn, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { bookGift } from '../actions/bookGift';
+import type { BookingErrorCode } from '../actions/errors';
 import { announceGiftBooked } from '../utils/giftBookedEvent';
 import { HandGiftIcon } from './HandIcons';
 import { stickerIconButtonClass, stickerInk, type StickerLook } from './Sticker';
@@ -21,7 +23,9 @@ type BookButtonProps = {
 export function BookButton({ id, version, sticker }: BookButtonProps) {
   const { data: session, status: sessionStatus } = useSession();
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<BookingErrorCode | null>(null);
+  const t = useTranslations('wishlist');
+  const tErrors = useTranslations('errors');
 
   const currentUserEmail = session?.user?.email;
 
@@ -57,13 +61,13 @@ export function BookButton({ id, version, sticker }: BookButtonProps) {
         size="icon"
         className={cn(stickerIconButtonClass, 'hover:-rotate-6')}
         style={stickerInk(sticker)}
-        aria-label={isPending ? 'Booking...' : 'Book'}
+        aria-label={isPending ? t('booking') : t('book')}
       >
         <HandGiftIcon className="size-10" sticker={sticker.paper} />
       </Button>
       {error && (
         <p role="alert" className="mt-2 text-center text-sm text-red-500">
-          {error}
+          {tErrors(error)}
         </p>
       )}
     </>

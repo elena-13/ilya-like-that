@@ -1,9 +1,10 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 import type { WishlistItem } from '@/payload-types';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/navigation';
 import { paths } from '@/lib/paths';
 import { HandGiftIcon } from './HandIcons';
 import { DEFAULT_STICKER, getItemStickers, PillIcon, stickerPillClass } from './Sticker';
@@ -19,6 +20,8 @@ type MyGiftsListProps = {
 };
 
 export default function MyGiftsList({ items }: MyGiftsListProps) {
+  const t = useTranslations('myGifts');
+
   if (items.length === 0) {
     return (
       <div className={cn(softCardClass, 'flex flex-col items-center gap-2 p-10 text-center')}>
@@ -26,13 +29,13 @@ export default function MyGiftsList({ items }: MyGiftsListProps) {
           <HandGiftIcon className="size-14" sticker={DEFAULT_STICKER.paper} />
         </span>
         <h2 className="mt-2 font-secondary text-xl text-navy">
-          You haven&apos;t booked any gifts yet
+          {t('emptyTitle')}
         </h2>
-        <p className="text-navy/60">Pick something from the wishlist and it will show up here.</p>
+        <p className="text-navy/60">{t('emptyText')}</p>
         <Button asChild variant="outline" className={cn(stickerPillClass, 'mt-5')}>
           <Link href={paths.home()}>
             <PillIcon icon={HandGiftIcon} sticker={DEFAULT_STICKER} />
-            Browse the wishlist
+            {t('browse')}
           </Link>
         </Button>
       </div>

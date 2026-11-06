@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 import { HandGiftIcon } from './HandIcons';
 import { DEFAULT_STICKER, type StickerLook } from './Sticker';
 
@@ -12,12 +14,14 @@ type BookedLabelProps = {
 // "already gifted" for everyone else. Looks like the outlined sticker
 // buttons (Log in, Cancel booking) but is only a label, not clickable.
 export function BookedLabel({ mine, sticker = DEFAULT_STICKER }: BookedLabelProps) {
+  const t = useTranslations('wishlist');
+
   return (
     <span className="inline-flex h-10 items-center gap-1.5 rounded-full border-2 border-navy pl-1.5 pr-3.5 font-secondary text-sm text-navy">
       <span style={{ color: sticker.ink }}>
         <HandGiftIcon className="size-7" sticker={sticker.paper} />
       </span>
-      {mine ? 'your gift' : 'already gifted'}
+      {mine ? t('yourGift') : t('alreadyGifted')}
     </span>
   );
 }
