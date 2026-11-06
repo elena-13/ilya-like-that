@@ -2,7 +2,13 @@
 
 import { useState, useTransition } from 'react';
 import { HandCrossIcon, HandGiftIcon } from './HandIcons';
-import { DEFAULT_STICKER, stickerPillClass, PillIcon, type StickerLook } from './Sticker';
+import {
+  compactPillClass,
+  DEFAULT_STICKER,
+  PillIcon,
+  stickerPillClass,
+  type StickerLook,
+} from './Sticker';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -59,7 +65,7 @@ export function UnbookButton({
         onClick={handleUnbook}
         disabled={isPending}
         variant="outline"
-        className={cn(stickerPillClass, compact && 'h-10 gap-1.5 pl-1.5 pr-3.5 text-sm')}
+        className={cn(stickerPillClass, compact && compactPillClass)}
         aria-label="Cancel booking"
       >
         {restingLabel && !isPending && (

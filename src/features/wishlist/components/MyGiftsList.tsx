@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { paths } from '@/lib/paths';
 import { HandGiftIcon } from './HandIcons';
 import { DEFAULT_STICKER, getItemStickers, PillIcon, stickerPillClass } from './Sticker';
-import { ShopLinkButton } from './ShopLinkButton';
+import { ShopLinkPill } from './ShopLinkPill';
 import { UnbookButton } from './UnbookButton';
 import { softCardClass } from '../styles';
 import { formatBrand } from '../utils/formatBrand';
@@ -78,8 +78,8 @@ function MyGiftRow({ item }: { item: WishlistItem }) {
         </h2>
       </div>
 
-      <div className="flex w-full shrink-0 items-center justify-end gap-1 sm:w-auto">
-        {item.shopLink && <ShopLinkButton href={item.shopLink} sticker={stickers.link} />}
+      <div className="flex w-full shrink-0 items-center justify-end gap-2 sm:w-auto">
+        {item.shopLink && <ShopLinkPill href={item.shopLink} sticker={stickers.link} compact />}
         <UnbookButton id={String(item.id)} sticker={stickers.book} compact />
       </div>
     </li>

@@ -57,6 +57,9 @@ export const stickerPillClass = `
   dark:border-navy dark:bg-transparent dark:hover:bg-background
 `;
 
+// Smaller sticker pill for tight spots (cards, My gifts rows).
+export const compactPillClass = 'h-10 gap-1.5 pl-1.5 pr-3.5 text-sm';
+
 // Wrapper for the icon inside a sticker pill: ink colour + hover wiggle.
 const stickerPillIconClass =
   'transition-transform duration-300 group-hover/pill:scale-110 group-hover/pill:rotate-6';

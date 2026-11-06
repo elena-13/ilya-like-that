@@ -10,14 +10,9 @@ import { getItemUrl } from '@/features/wishlist/utils/getItemUrl';
 import ItemReservation from '@/features/wishlist/components/ItemReservation';
 import { PrivateBadge } from '@/features/wishlist/components/PrivateBadge';
 import PageHeader from '@/widgets/PageHeader/PageHeader';
-import { Button } from '@/components/ui/button';
 import { CardTape } from '@/features/wishlist/components/CardTape';
-import { HandExternalLinkIcon } from '@/features/wishlist/components/HandIcons';
-import {
-  getItemStickers,
-  stickerPillClass,
-  PillIcon,
-} from '@/features/wishlist/components/Sticker';
+import { ShopLinkPill } from '@/features/wishlist/components/ShopLinkPill';
+import { getItemStickers } from '@/features/wishlist/components/Sticker';
 import { getCardLook } from '@/features/wishlist/utils/getCardLook';
 import { formatBrand } from '@/features/wishlist/utils/formatBrand';
 import { cn } from '@/lib/utils';
@@ -107,12 +102,7 @@ export default async function ItemPage({ params }: Props) {
             {/* Where to buy it belongs with what the gift is, not with the
                 booking buttons: a quieter pill under the title. */}
             {item.shopLink && (
-              <Button asChild variant="outline" className={cn(stickerPillClass, 'mt-4')}>
-                <a href={item.shopLink} target="_blank" rel="noopener noreferrer">
-                  <PillIcon icon={HandExternalLinkIcon} sticker={stickers.link} />
-                  View in the shop
-                </a>
-              </Button>
+              <ShopLinkPill href={item.shopLink} sticker={stickers.link} className="mt-4" />
             )}
           </div>
 
