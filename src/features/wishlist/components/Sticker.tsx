@@ -31,3 +31,20 @@ export function getStickerLook(seed: string): StickerLook {
 export function stickerInk(look: StickerLook): CSSProperties {
   return { color: look.ink };
 }
+
+// Default sticker for buttons that aren't tied to a card.
+export const DEFAULT_STICKER: StickerLook = { paper: '#f78fb0', ink: '#7a1e3a' };
+
+// Outlined navy pill for labelled buttons with a sticker icon
+// (Log in, Cancel booking). Tilts a little and fills on hover.
+export const stickerPillClass = `
+  group/pill h-11 cursor-pointer gap-2 rounded-full border-2 border-navy bg-transparent
+  pl-2 pr-5 font-secondary text-base text-navy shadow-none
+  transition-[background-color,rotate,scale] duration-300
+  hover:-rotate-2 hover:bg-background hover:text-navy
+  dark:border-navy dark:bg-transparent dark:hover:bg-background
+`;
+
+// Wrapper for the icon inside a sticker pill: ink colour + hover wiggle.
+export const stickerPillIconClass =
+  'transition-transform duration-300 group-hover/pill:scale-110 group-hover/pill:rotate-6';
