@@ -76,6 +76,18 @@ export function HandExternalLinkIcon(props: HandIconProps) {
   );
 }
 
+export function HandHeartIcon(props: HandIconProps) {
+  // Same drawing as the envelope seal in scripts/sprites/owl-flying.mjs
+  return (
+    <HandIcon strokeWidth={1.9} {...props}>
+      {/* outline, the tip doesn't quite close, like a quick marker stroke */}
+      <path d="M12 19.2C9.6 17.4 6.9 15.3 5.3 12.9C3.9 10.8 4.2 7.9 6.3 6.6C8.4 5.4 10.8 6.3 11.9 8.6C13.1 6.2 15.6 5.1 17.8 6.4C19.9 7.7 20.2 10.6 18.8 12.7C17.3 15.1 14.6 17.3 12.3 19" />
+      {/* little shine */}
+      <path d="M7.5 9.6C7.6 8.8 8.1 8.2 8.9 8" strokeWidth={1.5} />
+    </HandIcon>
+  );
+}
+
 export function HandLoginIcon(props: HandIconProps) {
   return (
     <HandIcon strokeWidth={2} {...props}>

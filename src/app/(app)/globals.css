@@ -219,6 +219,28 @@
     }
   }
 
+  /* Owl sprite: slide the frame strip one frame per step
+     (use with steps(N) where N is the number of frames). */
+  @keyframes sprite-strip {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Slow hover drift of the flying owl. */
+  @keyframes owl-hover {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    30% {
+      transform: translate3d(6px, -10px, 0) rotate(1.5deg);
+    }
+    65% {
+      transform: translate3d(-5px, 6px, 0) rotate(-1deg);
+    }
+  }
+
 }
 
 /* ---------------------------------
