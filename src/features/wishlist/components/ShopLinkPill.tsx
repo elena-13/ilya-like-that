@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { HandExternalLinkIcon } from './HandIcons';
@@ -14,6 +16,8 @@ type ShopLinkPillProps = {
 // "View in the shop": labelled outlined pill with the link sticker
 // (item page and My gifts). Cards use the icon-only ShopLinkButton.
 export function ShopLinkPill({ href, sticker, compact = false, className }: ShopLinkPillProps) {
+  const t = useTranslations('wishlist');
+
   return (
     <Button
       asChild
@@ -26,7 +30,7 @@ export function ShopLinkPill({ href, sticker, compact = false, className }: Shop
           sticker={sticker}
           className={compact ? 'size-7' : undefined}
         />
-        View in the shop
+        {t('viewInShop')}
       </a>
     </Button>
   );

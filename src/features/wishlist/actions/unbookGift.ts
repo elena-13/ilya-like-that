@@ -5,17 +5,13 @@ import config from '@payload-config';
 import { revalidatePath } from 'next/cache';
 
 import { getCurrentUser } from '@/lib/auth-utils';
-import { paths } from '@/lib/paths';
+import { fail, type BookingResult } from './errors';
 
-type UnbookGiftResult = { success: true } | { success: false; error: string };
-
-const fail = (error: string): UnbookGiftResult => ({ success: false, error });
-
-export async function unbookGift(id: string): Promise<UnbookGiftResult> {
+export async function unbookGift(id: string): Promise<BookingResult> {
   const user = await getCurrentUser();
 
   if (!user?.email) {
-    return fail('Please sign in with Google to cancel a booking.');
+    return fail('signInToCancel');
   }
 
   try {
@@ -23,12 +19,12 @@ export async function unbookGift(id: string): Promise<UnbookGiftResult> {
     const item = await payload.findByID({ collection: 'wishlist-items', id });
 
     if (item.status !== 'booked') {
-      return fail('This gift is not booked.');
+      return fail('notBooked');
     }
 
     // Only the guest who made the booking may cancel it.
     if (item.bookedBy !== user.email) {
-      return fail('You can only cancel your own booking.');
+      return fail('notYours');
     }
 
     // Bump the version so any booking attempt made against the old state fails its check.
@@ -42,12 +38,11 @@ export async function unbookGift(id: string): Promise<UnbookGiftResult> {
       },
     });
 
-    revalidatePath('/');
-    revalidatePath('/item/[slug]', 'page');
-    revalidatePath(paths.myGifts());
+    // Every page under [locale] (home, item, My gifts) in every language.
+    revalidatePath('/[locale]', 'layout');
     return { success: true };
   } catch (error) {
     console.error('Failed to unbook gift:', error);
-    return fail('Something went wrong while cancelling the booking. Please try again.');
+    return fail('cancelFailed');
   }
 }

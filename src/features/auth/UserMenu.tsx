@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import type { Session } from 'next-auth';
 import { Gift, LogOut, Settings } from 'lucide-react';
 
@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Link } from '@/i18n/navigation';
 import { paths } from '@/lib/paths';
 
 type UserMenuProps = {
@@ -32,12 +33,14 @@ function initials(name?: string | null, email?: string | null) {
 }
 
 export default function UserMenu({ user }: UserMenuProps) {
+  const t = useTranslations('auth');
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button aria-label="User menu">
+        <button aria-label={t('userMenu')}>
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'User'} />
+            <AvatarImage src={user.image ?? undefined} alt={user.name ?? t('userFallback')} />
             <AvatarFallback>{initials(user.name, user.email)}</AvatarFallback>
           </Avatar>
         </button>
@@ -53,20 +56,21 @@ export default function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuItem asChild className="cursor-pointer">
           <Link href={paths.myGifts()}>
             <Gift className="h-4 w-4" />
-            My gifts
+            {t('myGifts')}
           </Link>
         </DropdownMenuItem>
         {user.isAdmin && (
           <DropdownMenuItem asChild className="cursor-pointer">
-            <Link href={paths.admin()}>
+            {/* Plain <a>: the Payload admin lives outside the locale routes. */}
+            <a href={paths.admin()}>
               <Settings className="h-4 w-4" />
-              Manage wishlist
-            </Link>
+              {t('manageWishlist')}
+            </a>
           </DropdownMenuItem>
         )}
         <DropdownMenuItem onSelect={() => signOut()} className="cursor-pointer">
           <LogOut className="h-4 w-4" />
-          Log out
+          {t('logOut')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

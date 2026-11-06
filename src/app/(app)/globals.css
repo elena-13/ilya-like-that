@@ -1,6 +1,20 @@
 /* Tailwind v4 */
 @import 'tailwindcss';
 
+/* Philosopher (SIL Open Font License), Cyrillic letters only, for the UA
+   version: Faculty Glyphic has no Cyrillic. Self-hosted rather than via
+   next/font, which ships every subset (Latin too) and puts a system
+   fallback font in front of it. The unicode-range means English pages never
+   download this file, and Latin letters keep using Faculty Glyphic. */
+@font-face {
+  font-family: 'Philosopher UA';
+  src: url('./assets/fonts/Philosopher-Regular-cyrillic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .motion-safe\:animate-none {
     animation: none !important;
@@ -132,7 +146,10 @@
 
   /* Fonts (bound to next/font variables from <html class="...">) */
   --font-primary: var(--font-primary);
-  --font-secondary: var(--font-secondary);
+  /* Cyrillic (UA) from Philosopher, everything else from Faculty Glyphic.
+     Philosopher goes first: its unicode-range lets Latin fall through, while
+     after Faculty Glyphic its system fallback would grab the Cyrillic. */
+  --font-secondary: 'Philosopher UA', var(--font-glyphic);
   --font-sans: var(--font-primary); /* default app font */
   --font-heading: var(--font-secondary);
 

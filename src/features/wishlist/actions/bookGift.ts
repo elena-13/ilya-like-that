@@ -5,18 +5,14 @@ import config from '@payload-config';
 import { revalidatePath } from 'next/cache';
 
 import { getCurrentUser } from '@/lib/auth-utils';
-import { paths } from '@/lib/paths';
+import { fail, type BookingResult } from './errors';
 import { canViewItem } from '../data/visibility';
 
-type BookGiftResult = { success: true } | { success: false; error: string };
-
-const fail = (error: string): BookGiftResult => ({ success: false, error });
-
-export async function bookGift(id: string, currentVersion: number): Promise<BookGiftResult> {
+export async function bookGift(id: string, currentVersion: number): Promise<BookingResult> {
   const user = await getCurrentUser();
 
   if (!user?.email) {
-    return fail('Please sign in with Google to book a gift.');
+    return fail('signInToBook');
   }
 
   try {
@@ -25,16 +21,16 @@ export async function bookGift(id: string, currentVersion: number): Promise<Book
 
     // Guests can't see private items, so they can't book them either.
     if (!canViewItem(item, user.isAdmin)) {
-      return fail('This gift could not be found.');
+      return fail('notFound');
     }
 
     // Compare-and-swap check: bail out if someone changed the item since it was loaded.
     if ((item.version ?? 1) !== currentVersion) {
-      return fail('Oops! Someone else has just booked this gift. Please refresh the page.');
+      return fail('versionConflict');
     }
 
     if (item.status === 'booked') {
-      return fail('This gift has already been booked.');
+      return fail('alreadyBooked');
     }
 
     // Swap: mark as booked and bump the version so concurrent requests fail the check above.
@@ -49,12 +45,11 @@ export async function bookGift(id: string, currentVersion: number): Promise<Book
     });
 
     // Invalidate the Next.js cache for the home and item pages so every visitor sees the update.
-    revalidatePath('/');
-    revalidatePath('/item/[slug]', 'page');
-    revalidatePath(paths.myGifts());
+    // Every page under [locale] (home, item, My gifts) in every language.
+    revalidatePath('/[locale]', 'layout');
     return { success: true };
   } catch (error) {
     console.error('Failed to book gift:', error);
-    return fail('Something went wrong while booking the gift. Please try again.');
+    return fail('bookFailed');
   }
 }

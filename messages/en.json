@@ -1,5 +1,72 @@
 {
-  "test": {
-    "hello": "Hello"
+  "metadata": {
+    "title": "Ilya Like That!",
+    "description": "Ilya's Wishlist"
+  },
+  "home": {
+    "introLabel": "Intro",
+    "tagline": "A little wishlist for a little human.",
+    "wishlistLabel": "Wishlist"
+  },
+  "nav": {
+    "backToList": "Back to list",
+    "language": "Language"
+  },
+  "auth": {
+    "logIn": "Log in",
+    "logInWithGoogle": "Log in with Google",
+    "userMenu": "User menu",
+    "userFallback": "User",
+    "myGifts": "My gifts",
+    "manageWishlist": "Manage wishlist",
+    "logOut": "Log out"
+  },
+  "wishlist": {
+    "emptyTitle": "This wishlist is empty",
+    "emptyText": "Once wishes are added, they will appear here.",
+    "book": "Book",
+    "booking": "Booking…",
+    "cancelBooking": "Cancel booking",
+    "cancelling": "Cancelling…",
+    "yourGift": "your gift",
+    "alreadyGifted": "already gifted",
+    "private": "Private · only you see this",
+    "viewInShop": "View in the shop",
+    "openShopLink": "Open external link",
+    "reserved": "Reserved",
+    "available": "Available",
+    "statusAvailable": "This gift hasn't been reserved yet. Book it to let others know it's taken.",
+    "statusMine": "You reserved this gift. No one else can book it while it stays reserved.",
+    "statusOthers": "Someone has already reserved this gift."
+  },
+  "myGifts": {
+    "metaTitle": "My gifts | Ilya Like That!",
+    "metaDescription": "Gifts you have promised to bring",
+    "title": "My gifts",
+    "intro": "Everything you've promised to gift. Changed your mind? Cancel a booking so someone else can pick it.",
+    "signIn": "Log in to see the gifts you've booked.",
+    "emptyTitle": "You haven't booked any gifts yet",
+    "emptyText": "Pick something from the wishlist and it will show up here.",
+    "browse": "Browse the wishlist"
+  },
+  "item": {
+    "notFoundTitle": "Gift not found",
+    "notFoundHeading": "Gift not found 🕵️‍♀️",
+    "notFoundText": "The link might be outdated, or the item has been removed.",
+    "backToWishlist": "Back to wishlist",
+    "metaTitle": "{title} | My Wishlist",
+    "metaDescription": "Gift {title}",
+    "metaDescriptionWithBrand": "Gift {title} by {brand}"
+  },
+  "errors": {
+    "signInToBook": "Please sign in with Google to book a gift.",
+    "notFound": "This gift could not be found.",
+    "versionConflict": "Oops! Someone else has just booked this gift. Please refresh the page.",
+    "alreadyBooked": "This gift has already been booked.",
+    "bookFailed": "Something went wrong while booking the gift. Please try again.",
+    "signInToCancel": "Please sign in with Google to cancel a booking.",
+    "notBooked": "This gift is not booked.",
+    "notYours": "You can only cancel your own booking.",
+    "cancelFailed": "Something went wrong while cancelling the booking. Please try again."
   }
 }

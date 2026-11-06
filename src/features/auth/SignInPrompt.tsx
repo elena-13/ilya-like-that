@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -20,6 +21,8 @@ type SignInPromptProps = {
 
 // A white card with the message and the outlined Log in pill.
 export function SignInPrompt({ message, callbackUrl }: SignInPromptProps) {
+  const t = useTranslations('auth');
+
   return (
     <div className={cn('flex flex-col items-center gap-5 p-10 text-center', softCardClass)}>
       <p className="font-secondary text-lg text-navy">{message}</p>
@@ -29,7 +32,7 @@ export function SignInPrompt({ message, callbackUrl }: SignInPromptProps) {
         onClick={() => signIn('google', { callbackUrl: callbackUrl ?? window.location.href })}
       >
         <PillIcon icon={HandLoginIcon} sticker={DEFAULT_STICKER} />
-        Log in with Google
+        {t('logInWithGoogle')}
       </Button>
     </div>
   );

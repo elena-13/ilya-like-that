@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -14,6 +15,8 @@ import {
 // Outlined pill with a die-cut sticker icon, in the same hand-drawn
 // style as the icons on the wishlist cards.
 export function LoginButton() {
+  const t = useTranslations('auth');
+
   return (
     <Button
       variant="outline"
@@ -21,7 +24,7 @@ export function LoginButton() {
       onClick={() => signIn('google')}
     >
       <PillIcon icon={HandLoginIcon} sticker={DEFAULT_STICKER} />
-      Log in
+      {t('logIn')}
     </Button>
   );
 }

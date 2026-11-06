@@ -15,10 +15,11 @@ export const neurath = localFont({
   display: 'swap',
 });
 
-// Google Faculty Glyphic
+// Google Faculty Glyphic: Latin only, it has no Cyrillic letters. Ukrainian
+// text gets Philosopher instead, see the @font-face in globals.css.
 export const facultyGlyphic = Faculty_Glyphic({
   weight: ['400'],
   subsets: ['latin'],
-  variable: '--font-secondary',
+  variable: '--font-glyphic',
   display: 'swap',
 });

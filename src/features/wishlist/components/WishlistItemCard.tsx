@@ -3,9 +3,10 @@
 import { memo } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 import type { WishlistItem } from '@/payload-types';
+import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { BookButton } from './BookButton';
 import { BookedLabel } from './BookedLabel';
@@ -26,6 +27,7 @@ type WishlistItemCardProps = {
 
 const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const { data: session } = useSession();
+  const t = useTranslations('wishlist');
   const image = getItemImage(item);
   const itemUrl = getItemUrl(item);
   const look = getCardLook(item.id);
@@ -91,7 +93,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
                     id={String(item.id)}
                     sticker={stickers.book}
                     compact
-                    restingLabel="your gift"
+                    restingLabel={t('yourGift')}
                   />
                 </div>
               </>

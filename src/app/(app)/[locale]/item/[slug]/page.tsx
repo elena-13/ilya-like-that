@@ -1,7 +1,9 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import Image from 'next/image';
 
+import { redirect } from '@/i18n/navigation';
 import { getItemById } from '@/features/wishlist/data/getItemById';
 import { canViewItem } from '@/features/wishlist/data/visibility';
 import { getCurrentUser } from '@/lib/auth-utils';
@@ -35,16 +37,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Await params for Next.js 15 compatibility
   const { slug } = await params;
 
+  const t = await getTranslations('item');
+
   const id = extractIdFromSlug(slug);
-  if (!id) return { title: 'Gift not found' };
+  if (!id) return { title: t('notFoundTitle') };
 
   const [item, user] = await Promise.all([getItemById(id), getCurrentUser()]);
   // Don't leak a private item's title to guests through the page metadata.
-  if (!item || !canViewItem(item, user?.isAdmin)) return { title: 'Gift not found' };
+  if (!item || !canViewItem(item, user?.isAdmin)) return { title: t('notFoundTitle') };
 
   return {
-    title: `${item.title} | My Wishlist`,
-    description: item.brand ? `Gift ${item.title} by ${item.brand}` : `Gift ${item.title}`,
+    title: t('metaTitle', { title: item.title }),
+    description: item.brand
+      ? t('metaDescriptionWithBrand', { title: item.title, brand: item.brand })
+      : t('metaDescription', { title: item.title }),
   };
 }
 
@@ -60,7 +66,7 @@ export default async function ItemPage({ params }: Props) {
   // The slug is derived from the title, so after a rename old links redirect to the current URL.
   const itemUrl = getItemUrl(item);
   if (`/item/${slug}` !== itemUrl) {
-    redirect(itemUrl);
+    redirect({ href: itemUrl, locale: await getLocale() });
   }
 
   const image = getItemImage(item);

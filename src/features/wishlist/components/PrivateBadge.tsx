@@ -1,9 +1,12 @@
 import { EyeOff } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/lib/utils';
 
 // Marks an item only admins can see.
 export function PrivateBadge({ className }: { className?: string }) {
+  const t = useTranslations('wishlist');
+
   return (
     <span
       className={cn(
@@ -12,7 +15,7 @@ export function PrivateBadge({ className }: { className?: string }) {
       )}
     >
       <EyeOff className="h-3.5 w-3.5" />
-      Private · only you see this
+      {t('private')}
     </span>
   );
 }

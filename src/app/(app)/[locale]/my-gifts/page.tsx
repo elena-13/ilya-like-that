@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 import { getCurrentUser } from '@/lib/auth-utils';
 import { getGiftsBookedBy } from '@/features/wishlist/data/getGiftsBookedBy';
@@ -6,31 +7,29 @@ import MyGiftsList from '@/features/wishlist/components/MyGiftsList';
 import { SignInPrompt } from '@/features/auth/SignInPrompt';
 import PageHeader from '@/widgets/PageHeader/PageHeader';
 
-export const metadata: Metadata = {
-  title: 'My gifts | Ilya Like That!',
-  description: 'Gifts you have promised to bring',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('myGifts');
+  return { title: t('metaTitle'), description: t('metaDescription') };
+}
 
 export default async function MyGiftsPage() {
   const user = await getCurrentUser();
   const items = user?.email ? await getGiftsBookedBy(user.email) : [];
+  const t = await getTranslations('myGifts');
 
   return (
     <>
       <PageHeader />
       <main className="mx-auto flex max-w-3xl flex-col gap-10 px-4 py-10 md:py-14">
         <div>
-          <h1 className="font-secondary text-3xl leading-tight text-navy md:text-4xl">My gifts</h1>
-          <p className="mt-2 font-secondary text-navy/60">
-            Everything you&apos;ve promised to gift. Changed your mind? Cancel a booking so someone
-            else can pick it.
-          </p>
+          <h1 className="font-secondary text-3xl leading-tight text-navy md:text-4xl">{t('title')}</h1>
+          <p className="mt-2 font-secondary text-navy/60">{t('intro')}</p>
         </div>
 
         {user?.email ? (
           <MyGiftsList items={items} />
         ) : (
-          <SignInPrompt message="Log in to see the gifts you've booked." />
+          <SignInPrompt message={t('signIn')} />
         )}
       </main>
     </>
