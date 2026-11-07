@@ -1,12 +1,6 @@
 // Birthday invite: the owl peeks out of the hero clouds twice, flies to the
 // front with an envelope, drops it, and the envelope opens into the invite.
 
-/**
- * While testing: show the invite on every page load. Set to false to show it
- * only once per invited browser (remembered in localStorage).
- */
-export const INVITE_SHOW_EVERY_TIME = true;
-
 /** Ilya's age at the party (the big number on the card). */
 export const INVITE_AGE = 1;
 

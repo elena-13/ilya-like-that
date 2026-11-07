@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useRef } from 'react';
+import { useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
@@ -26,7 +26,11 @@ type WishlistItemCardProps = {
   item: WishlistItem;
 };
 
-const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
+// A plain function, not memo(): the list is rendered on the server, and React
+// can't match a memo() client component across server refreshes, so every
+// card remounted after a booking. On iPhone the list briefly emptied and the
+// page jumped. (Memo saved nothing here anyway: each refresh sends new props.)
+export default function WishlistItemCard({ item }: WishlistItemCardProps) {
   const { data: session } = useSession();
   const t = useTranslations('wishlist');
   const image = getItemImage(item);
@@ -177,7 +181,4 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
       )}
     </article>
   );
-});
-
-WishlistItemCard.displayName = 'WishlistItemCard';
-export default WishlistItemCard;
+}
