@@ -39,7 +39,11 @@ export default defineConfig({
   webServer: {
     command: `npm run dev -- --port ${PORT}`,
     url: BASE_URL,
-    reuseExistingServer: !process.env.CI,
+    // Always start a fresh server. Reusing one already on this port (e.g. a
+    // plain `npm run dev -- --port 3001`) would run the tests against the dev
+    // database instead of ilya_e2e. If the port is busy, Playwright fails
+    // with a clear "already used" error instead of silently reusing it.
+    reuseExistingServer: false,
     // The first dev compile with Payload can be slow.
     timeout: 180_000,
     // Real env vars win over .env files in Next, so the server uses the e2e
