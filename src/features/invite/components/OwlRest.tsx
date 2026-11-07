@@ -63,7 +63,12 @@ export function OwlRest() {
     place();
 
     let timer = 0;
+    let width = window.innerWidth;
     const onResize = () => {
+      // Phones fire resize when the address bar hides or shows on scroll;
+      // only the height changes then, and the owl should stay put.
+      if (window.innerWidth === width) return;
+      width = window.innerWidth;
       clearTimeout(timer);
       timer = window.setTimeout(place, 250);
     };
