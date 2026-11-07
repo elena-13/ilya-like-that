@@ -17,7 +17,8 @@ import { InviteOverlay } from './components/InviteOverlay';
 //              config, one OwlPeek per cloud) and takes off on the last one;
 //   'flight' – it flies to the front, drops the envelope, and the envelope
 //              opens (InviteOverlay, a full-screen layer);
-//              It's remembered as seen (localStorage) as soon as it opens;
+//              It's remembered as seen (localStorage) as soon as it opens.
+//              The page can't scroll during 'peek' and 'flight';
 //   'rest'   – once the invite is closed (or was seen on an earlier visit),
 //              the owl sits on a cloud (OwlRest); clicking it reopens the
 //              invite, so guests can check the date again.
@@ -100,9 +101,26 @@ export function BirthdayInviteProvider({ invited, signedIn = false, children }: 
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setPeekStep(0);
+    // The page is locked during the show, so start it where the owl is.
+    window.scrollTo(0, 0);
     if (reduceMotion) writeSeen(INVITE_SEEN_KEY);
     setPhase(reduceMotion ? 'flight' : 'peek');
   }, [invited, signedIn]);
+
+  // No scrolling while the owl is on stage (peeking or bringing the invite):
+  // the guest can't scroll it away mid-show. Unlocked once it rests.
+  const animating = phase === 'peek' || phase === 'flight';
+  useEffect(() => {
+    if (!animating) return;
+    const root = document.documentElement.style;
+    const prev = { overflow: root.overflow, gutter: root.scrollbarGutter };
+    root.overflow = 'hidden';
+    root.scrollbarGutter = 'stable';
+    return () => {
+      root.overflow = prev.overflow;
+      root.scrollbarGutter = prev.gutter;
+    };
+  }, [animating]);
 
   const peekDone = useCallback(() => setPeekStep((step) => step + 1), []);
 
