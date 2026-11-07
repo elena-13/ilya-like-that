@@ -18,9 +18,11 @@ export async function Hero() {
   ]);
 
   return (
+    // svh, not dvh: on phones dvh grows as the address bar hides while
+    // scrolling, which shifted the title, the clouds and the resting owl.
     <section
       aria-label={t('introLabel')}
-      className="min-h-dvh flex px-4 pb-4 lg:px-8 lg:pb-8 lg:pt-8"
+      className="min-h-svh flex px-4 pb-4 lg:px-8 lg:pb-8 lg:pt-8"
     >
       <div
         data-owl-bounds

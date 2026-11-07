@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
@@ -15,6 +15,7 @@ import { PrivateBadge } from './PrivateBadge';
 import { ShopLinkButton } from './ShopLinkButton';
 import { getItemStickers } from './Sticker';
 import { UnbookButton } from './UnbookButton';
+import { useBookGift } from '../hooks/useBookGift';
 import { cardShadowClass } from '../styles';
 import { formatBrand } from '../utils/formatBrand';
 import { getCardLook } from '../utils/getCardLook';
@@ -33,9 +34,15 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
   const look = getCardLook(item.id);
   const stickers = getItemStickers(item.id);
 
-  const isBooked = item.status === 'booked';
+  const tErrors = useTranslations('errors');
+  // Booked state as shown: switches to booked the moment Book is tapped.
+  const { isBooked, bookedBy, isConfirming, error, book, canBook } = useBookGift(item);
   const isBookedByCurrentUser =
-    isBooked && Boolean(session?.user?.email) && item.bookedBy === session?.user?.email;
+    isBooked && Boolean(session?.user?.email) && bookedBy === session?.user?.email;
+  // Booked while the page is open (not already booked on load): the labels
+  // fade in along with the frosting instead of popping up.
+  const bookedOnLoad = useRef(isBooked);
+  const justBooked = isBooked && !bookedOnLoad.current;
 
   return (
     <article
@@ -70,11 +77,20 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
             // moves or scrolls; backdrop-filter re-blurred what's behind it on
             // every frame. No forced GPU layer here: it would also pull the pill
             // and tape onto layers, and tilted layers render text soft.
-            className={cn('object-contain p-4', isBooked && 'blur-[3px] saturate-50')}
+            // The filter eases in when the gift gets booked.
+            className={cn(
+              'object-contain p-4 transition-[filter] duration-700 ease-out',
+              isBooked && 'blur-[3px] saturate-50',
+            )}
           />
-          {isBooked && (
-            <span aria-hidden className="pointer-events-none absolute inset-0 bg-white/40" />
-          )}
+          {/* Always rendered, so the white haze fades in rather than popping. */}
+          <span
+            aria-hidden
+            className={cn(
+              'pointer-events-none absolute inset-0 bg-white/40 transition-opacity duration-700 ease-out',
+              !isBooked && 'opacity-0',
+            )}
+          />
         </Link>
 
         {/* Booked: an outlined "reserved" label with the gift sticker at the
@@ -82,8 +98,17 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
             booking shows "your gift", which turns into Cancel booking on
             hover; touch devices show the label and the button. */}
         {isBooked && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-2 flex flex-col items-center gap-2">
-            {isBookedByCurrentUser ? (
+          <div
+            className={cn(
+              'pointer-events-none absolute inset-x-0 bottom-2 flex flex-col items-center gap-2',
+              justBooked && 'motion-safe:animate-[booked-in_500ms_ease-out_200ms_both]',
+            )}
+          >
+            {isBookedByCurrentUser && isConfirming ? (
+              // Booked on screen, not yet saved: no Cancel until the server
+              // confirms (the card's version is still the old one till then).
+              <BookedLabel mine sticker={stickers.book} />
+            ) : isBookedByCurrentUser ? (
               <>
                 <span className="[@media(hover:hover)]:hidden">
                   <BookedLabel mine sticker={stickers.book} />
@@ -106,7 +131,12 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
 
       <div className="flex items-end gap-2 px-1 pt-3">
         {/* Booked: the brand and title are frosted too, like the photo. */}
-        <div className={cn('min-w-0 flex-1', isBooked && 'blur-[2px] select-none')}>
+        <div
+          className={cn(
+            'min-w-0 flex-1 transition-[filter] duration-700 ease-out',
+            isBooked && 'blur-[2px] select-none',
+          )}
+        >
           {/* Only admins receive private items, so this is never shown to guests. */}
           {item.isPrivate && <PrivateBadge className="mb-2" />}
           {item.brand && (
@@ -134,18 +164,17 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
         ) : (
           <div className="-mr-1 -mb-1 flex shrink-0 items-center transition-opacity duration-300 md:opacity-0 md:group-hover/card:opacity-100 md:focus-within:opacity-100">
             {item.shopLink && <ShopLinkButton href={item.shopLink} sticker={stickers.link} />}
-            {/* flex, not block: a block around the inline button added a
-                line-height gap below it, making the row taller than the icon. */}
-            <div className="flex flex-col items-center">
-              <BookButton
-                id={String(item.id)}
-                version={item.version || 1}
-                sticker={stickers.book}
-              />
-            </div>
+            <BookButton sticker={stickers.book} onBook={book} disabled={!canBook} />
           </div>
         )}
       </div>
+
+      {/* Booking failed: the card is back to available, with the reason. */}
+      {error && (
+        <p role="alert" className="px-1 pt-2 text-sm text-red-500">
+          {tErrors(error)}
+        </p>
+      )}
     </article>
   );
 });
