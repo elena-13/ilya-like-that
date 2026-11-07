@@ -1,6 +1,9 @@
 /* Tailwind v4 */
 @import 'tailwindcss';
 
+/* Touch screens (phones, tablets): buttons grow to a 48px finger target. */
+@custom-variant touch (@media (pointer: coarse));
+
 /* Philosopher (SIL Open Font License), Cyrillic letters only, for the UA
    version: Faculty Glyphic has no Cyrillic. Self-hosted rather than via
    next/font, which ships every subset (Latin too) and puts a system

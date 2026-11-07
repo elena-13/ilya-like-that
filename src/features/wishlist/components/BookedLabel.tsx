@@ -11,7 +11,7 @@ type BookedLabelProps = {
 };
 
 // Shows that a gift is booked: "your gift" for the person who booked it,
-// "already gifted" for everyone else. Looks like the outlined sticker
+// "reserved" for everyone else. Looks like the outlined sticker
 // buttons (Log in, Cancel booking) but is only a label, not clickable.
 export function BookedLabel({ mine, sticker = DEFAULT_STICKER }: BookedLabelProps) {
   const t = useTranslations('wishlist');

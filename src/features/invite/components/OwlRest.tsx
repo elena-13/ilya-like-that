@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 
-import { OWL_SPOT } from '../config';
+import { OWL_MIN_WIDTH, OWL_SPOT } from '../config';
 import { useBirthdayInvite } from '../BirthdayInviteProvider';
 import { blinkOwl, flickEar, injectOwlSvg } from '../owlSvg';
 import { CLOUD_SRC, findOwlSeat, SHOWN, type Seat } from '../owlSeat';
@@ -27,7 +27,13 @@ const rand = (min: number, max: number) => min + Math.random() * (max - min);
 function fallbackSeat(): Seat | null {
   const container = document.querySelector<HTMLElement>('[data-cloud-slot="right"]');
   return container
-    ? { kind: 'cloud', container, x: OWL_SPOT.x, edge: OWL_SPOT.edge, width: OWL_SPOT.width }
+    ? {
+        kind: 'cloud',
+        container,
+        x: OWL_SPOT.x,
+        edge: OWL_SPOT.edge,
+        width: Math.max(OWL_SPOT.width, OWL_MIN_WIDTH / (container.clientWidth || 1)),
+      }
     : null;
 }
 

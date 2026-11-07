@@ -77,7 +77,7 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
           )}
         </Link>
 
-        {/* Booked: an outlined "already gifted" label with the gift sticker at the
+        {/* Booked: an outlined "reserved" label with the gift sticker at the
             bottom of the photo; clicks pass through to the gift. Your own
             booking shows "your gift", which turns into Cancel booking on
             hover; touch devices show the label and the button. */}
@@ -121,10 +121,22 @@ const WishlistItemCard = memo(({ item }: WishlistItemCardProps) => {
 
         {/* Icons sit at the bottom of the card, next to the title. On desktop
             they appear on hover (or keyboard focus); phones always show them. */}
-        {!isBooked && (
+        {/* Booked cards keep an empty spot the size of the icons (40px, 48px on touch), so
+            the title wraps the same and the card doesn't jump when booking. */}
+        {isBooked ? (
+          <div
+            aria-hidden
+            className={cn(
+              '-mr-1 -mb-1 h-10 shrink-0 touch:h-12',
+              item.shopLink ? 'w-20 touch:w-24' : 'w-10 touch:w-12',
+            )}
+          />
+        ) : (
           <div className="-mr-1 -mb-1 flex shrink-0 items-center transition-opacity duration-300 md:opacity-0 md:group-hover/card:opacity-100 md:focus-within:opacity-100">
             {item.shopLink && <ShopLinkButton href={item.shopLink} sticker={stickers.link} />}
-            <div>
+            {/* flex, not block: a block around the inline button added a
+                line-height gap below it, making the row taller than the icon. */}
+            <div className="flex flex-col items-center">
               <BookButton
                 id={String(item.id)}
                 version={item.version || 1}

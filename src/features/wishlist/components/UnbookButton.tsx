@@ -62,7 +62,7 @@ export function UnbookButton({
     });
   };
 
-  const iconSize = compact ? 'size-7' : 'size-8';
+  const iconSize = compact ? 'size-7 touch:size-9' : 'size-8 touch:size-9';
 
   return (
     <>

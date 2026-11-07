@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import { OWL_SPRITE, OWL_SPOT as SPOT, PEEKS, type PeekSide } from '../config';
+import { OWL_MIN_WIDTH, OWL_SPRITE, OWL_SPOT as SPOT, PEEKS, type PeekSide } from '../config';
 import { useBirthdayInvite } from '../BirthdayInviteProvider';
 import { dropFeathers, setFlapRate } from '../feathers';
 import { blinkOwl, flickEar, injectOwlSvg } from '../owlSvg';
@@ -193,7 +193,7 @@ export function OwlPeek({ side }: { side: PeekSide }) {
         style={{
           left: `${x * 100}%`,
           top: `${SPOT.hidden * 100}%`,
-          width: `${SPOT.width * 100}%`,
+          width: `max(${SPOT.width * 100}%, ${OWL_MIN_WIDTH}px)`,
           transform: 'translate(-50%, 0)',
           transformOrigin: '50% 90%',
           visibility: 'hidden',
