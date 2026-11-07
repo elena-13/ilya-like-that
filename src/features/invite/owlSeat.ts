@@ -1,4 +1,4 @@
-import { OWL_STATIC } from './config';
+import { OWL_MIN_WIDTH, OWL_STATIC } from './config';
 
 // Finds a seat for the resting owl: a fairly flat bump on a hero cloud's
 // top edge where the owl is on screen and clear of the title, the tagline
@@ -184,7 +184,7 @@ export async function findOwlSeat(root: ParentNode = document): Promise<Seat | n
     const box = container.getBoundingClientRect();
     if (!box.width || !box.height) continue;
 
-    const owlW = Math.min(120, Math.max(44, box.width * 0.09));
+    const owlW = Math.min(120, Math.max(OWL_MIN_WIDTH, box.width * 0.09));
     const owlH = owlW * OWL_STATIC.aspect;
     // Room for the clouds' drift and pointer parallax. Letters get a
     // smaller margin: brushing one while drifting just looks like peeking.
@@ -220,7 +220,7 @@ export async function findOwlSeat(root: ParentNode = document): Promise<Seat | n
   if (best) return best.seat;
 
   // 2. On its own small cloud, in a clear patch of the hero card.
-  const owlW = Math.min(64, Math.max(40, bounds.width * 0.11));
+  const owlW = Math.max(OWL_MIN_WIDTH, Math.min(72, bounds.width * 0.11));
   const owlH = owlW * OWL_STATIC.aspect;
   const cloudW = owlW * 2.1;
   const cloudH = cloudW * CLOUD_ASPECT;

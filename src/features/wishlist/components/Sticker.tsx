@@ -50,7 +50,7 @@ export const DEFAULT_STICKER: StickerLook = { paper: '#f78fb0', ink: '#7a1e3a' }
 // Outlined navy pill for labelled buttons with a sticker icon
 // (Log in, Cancel booking). Tilts a little and fills on hover.
 export const stickerPillClass = `
-  group/pill h-11 cursor-pointer gap-2 rounded-full border-2 border-navy bg-transparent
+  group/pill h-11 touch:h-12 cursor-pointer gap-2 rounded-full border-2 border-navy bg-transparent
   pl-2 pr-5 font-secondary text-base text-navy shadow-none
   transition-[background-color,rotate,scale] duration-300
   hover:-rotate-2 hover:bg-background hover:text-navy
@@ -58,7 +58,7 @@ export const stickerPillClass = `
 `;
 
 // Smaller sticker pill for tight spots (cards, My gifts rows).
-export const compactPillClass = 'h-10 gap-1.5 pl-1.5 pr-3.5 text-sm';
+export const compactPillClass = 'h-10 touch:h-12 gap-1.5 pl-1.5 pr-3.5 text-sm';
 
 // Wrapper for the icon inside a sticker pill: ink colour + hover wiggle.
 const stickerPillIconClass =
@@ -82,8 +82,12 @@ export function PillIcon({
 }
 
 // Icon-only sticker button (Book, shop link on cards): no fill, the
-// sticker grows and turns a little on hover.
+// sticker grows and turns a little on hover. 48px on touch screens, a
+// comfortable finger target. Its icon uses stickerIconClass.
 export const stickerIconButtonClass = cn(
-  'relative size-10 cursor-pointer bg-transparent hover:scale-110 hover:bg-transparent',
+  'relative size-10 touch:size-12 cursor-pointer bg-transparent hover:scale-110 hover:bg-transparent',
   'dark:hover:bg-transparent',
 );
+
+// Icon inside an icon-only sticker button: fills the button.
+export const stickerIconClass = 'size-10 touch:size-12';

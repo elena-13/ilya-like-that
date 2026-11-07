@@ -53,7 +53,7 @@ export function HeroClouds({ behindLeftCloud, behindRightCloud }: HeroCloudsProp
     >
       <div className="absolute inset-0 z-10 transition-[translate] duration-500 ease-out will-change-[translate] [translate:calc(var(--px)*-28px)_calc(var(--py)*-14px)]">
         {/* right cloud */}
-        <div className="absolute top-1/2 left-1/2 w-full max-w-none">
+        <div className="absolute top-[62%] left-[22%] w-[150%] max-w-none sm:top-1/2 sm:left-1/2 sm:w-full">
           {/* The drift moves the slot along with the cloud, so anything
               hiding behind it stays hidden. */}
           <div
@@ -76,7 +76,7 @@ export function HeroClouds({ behindLeftCloud, behindRightCloud }: HeroCloudsProp
         </div>
 
         {/* left cloud */}
-        <div className="absolute -top-1/15 right-1/2 w-[110%] max-w-none">
+        <div className="absolute top-[7%] right-[38%] w-[150%] max-w-none sm:-top-1/15 sm:right-1/2 sm:w-[110%]">
           <div
             data-cloud-slot="left"
             className="relative transform-gpu will-change-transform motion-safe:animate-[cloud-drift-2_23s_ease-in-out_infinite] [animation-delay:-7s]"

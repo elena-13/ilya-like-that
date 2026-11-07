@@ -14,7 +14,7 @@ import {
   getBurstOrigin,
 } from '../utils/giftBookedEvent';
 import { HandGiftIcon } from './HandIcons';
-import { stickerIconButtonClass, stickerInk, type StickerLook } from './Sticker';
+import { stickerIconButtonClass, stickerIconClass, stickerInk, type StickerLook } from './Sticker';
 
 type BookButtonProps = {
   id: string;
@@ -67,7 +67,7 @@ export function BookButton({ id, version, sticker }: BookButtonProps) {
         style={stickerInk(sticker)}
         aria-label={isPending ? t('booking') : t('book')}
       >
-        <HandGiftIcon className="size-10" sticker={sticker.paper} />
+        <HandGiftIcon className={stickerIconClass} sticker={sticker.paper} />
       </Button>
       {error && (
         <p role="alert" className="mt-2 text-center text-sm text-red-500">

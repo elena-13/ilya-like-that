@@ -51,13 +51,13 @@ export default async function Home() {
                   cloud behind them (it only sits between the letters). */}
               <h1
                 data-owl-avoid="text"
-                className="text-9xl font-primary font-extrabold text-navy max-w-6xl relative z-20 pointer-events-none"
+                className="text-6xl sm:text-8xl lg:text-9xl font-primary font-extrabold text-navy max-w-6xl relative z-20 pointer-events-none"
               >
                 {tMeta('title')}
               </h1>
               <p
                 data-owl-avoid="text"
-                className="text-3xl font-secondary text-navy max-w-2xl z-20 pointer-events-none"
+                className="text-xl sm:text-2xl lg:text-3xl text-balance font-secondary text-navy max-w-2xl z-20 pointer-events-none"
               >
                 {t('tagline')}
               </p>

@@ -28,7 +28,7 @@ export function ShopLinkPill({ href, sticker, compact = false, className }: Shop
         <PillIcon
           icon={HandExternalLinkIcon}
           sticker={sticker}
-          className={compact ? 'size-7' : undefined}
+          className={compact ? 'size-7 touch:size-9' : 'size-8 touch:size-9'}
         />
         {t('viewInShop')}
       </a>
